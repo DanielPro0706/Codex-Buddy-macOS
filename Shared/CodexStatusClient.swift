@@ -1,6 +1,17 @@
 import Foundation
 
 nonisolated enum CodexStatusClient {
+    enum RefreshSource: Sendable {
+        case mac
+        case cloud
+        case cache
+    }
+
+    struct RefreshResult: Sendable {
+        let snapshot: CodexStatusSnapshot?
+        let source: RefreshSource
+    }
+
     static func fetch(connection: MacConnection) async throws -> CodexStatusSnapshot {
         let endpoint = connection.baseURL.appending(path: "v1/status")
         var request = URLRequest(url: endpoint)
@@ -26,25 +37,19 @@ nonisolated enum CodexStatusClient {
         }
     }
 
-    static func refreshedSnapshot() async -> CodexStatusSnapshot? {
+    static func refreshLatest() async -> RefreshResult {
         let cachedSnapshot = CodexStatusCache.loadSnapshot()
         if let connection = CodexStatusCache.loadConnection(),
            let snapshot = try? await fetch(connection: connection) {
             CodexStatusCache.save(snapshot: snapshot)
-            return snapshot
+            return RefreshResult(snapshot: snapshot, source: .mac)
         }
 
-        if let cloudState = try? await CodexCloudSync.fetch() {
-            if let secret = cloudState.pushSecret { CodexStatusCache.savePushSecret(secret) }
-            guard let cloudSnapshot = cloudState.snapshot else { return cachedSnapshot }
-            let newest = [cachedSnapshot, cloudSnapshot]
-                .compactMap { $0 }
-                .max { $0.capturedAt < $1.capturedAt }
-            if let newest { CodexStatusCache.save(snapshot: newest) }
-            return newest
-        }
+        return await refreshFromCloudResult(cachedSnapshot: cachedSnapshot)
+    }
 
-        return cachedSnapshot
+    static func refreshedSnapshot() async -> CodexStatusSnapshot? {
+        await refreshLatest().snapshot
     }
 
     static func publishToCloud(_ snapshot: CodexStatusSnapshot) async {
@@ -58,23 +63,41 @@ nonisolated enum CodexStatusClient {
     }
 
     static func refreshFromCloud() async -> CodexStatusSnapshot? {
+        await refreshFromCloudResult().snapshot
+    }
+
+    static func refreshFromCloudResult() async -> RefreshResult {
+        await refreshFromCloudResult(cachedSnapshot: CodexStatusCache.loadSnapshot())
+    }
+
+    private static func refreshFromCloudResult(
+        cachedSnapshot: CodexStatusSnapshot?
+    ) async -> RefreshResult {
         do {
             let state = try await CodexCloudSync.fetch()
             if let secret = state.pushSecret { CodexStatusCache.savePushSecret(secret) }
-            if let snapshot = state.snapshot { CodexStatusCache.save(snapshot: snapshot) }
-            return state.snapshot
-        } catch {
-            return CodexStatusCache.loadSnapshot()
-        }
-    }
+            guard let cloudSnapshot = state.snapshot else {
+                return RefreshResult(snapshot: cachedSnapshot, source: .cache)
+            }
 
-    private static func legacyRefresh(connection: MacConnection) async -> CodexStatusSnapshot? {
-        do {
-            let snapshot = try await fetch(connection: connection)
-            CodexStatusCache.save(snapshot: snapshot)
-            return snapshot
+            let newestSnapshot: CodexStatusSnapshot
+            let source: RefreshSource
+            if let cachedSnapshot {
+                if cloudSnapshot.capturedAt >= cachedSnapshot.capturedAt {
+                    newestSnapshot = cloudSnapshot
+                    source = .cloud
+                } else {
+                    newestSnapshot = cachedSnapshot
+                    source = .cache
+                }
+            } else {
+                newestSnapshot = cloudSnapshot
+                source = .cloud
+            }
+            CodexStatusCache.save(snapshot: newestSnapshot)
+            return RefreshResult(snapshot: newestSnapshot, source: source)
         } catch {
-            return nil
+            return RefreshResult(snapshot: cachedSnapshot, source: .cache)
         }
     }
 
