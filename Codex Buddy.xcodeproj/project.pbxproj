@@ -1,0 +1,983 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		655F5BC2300A8F7E00BE9813 /* Codex Buddy Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 655F5BB8300A8F7D00BE9813 /* Codex Buddy Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA0000000000000000000020 /* Codex Buddy Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000010 /* Codex Buddy Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA0000000000000000000021 /* Codex Buddy Watch Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000011 /* Codex Buddy Watch Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		655F5BC0300A8F7E00BE9813 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 655F5B9E300A8F3900BE9813 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 655F5BB7300A8F7D00BE9813;
+			remoteInfo = "Codex Buddy Watch Watch App";
+		};
+		AA0000000000000000000030 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 655F5B9E300A8F3900BE9813 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA0000000000000000000060;
+			remoteInfo = "Codex Buddy Widget";
+		};
+		AA0000000000000000000031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 655F5B9E300A8F3900BE9813 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA0000000000000000000061;
+			remoteInfo = "Codex Buddy Watch Widget";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		655F5BC6300A8F7E00BE9813 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolder = Product;
+			files = (
+				655F5BC2300A8F7E00BE9813 /* Codex Buddy Watch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+		};
+		AA0000000000000000000040 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				AA0000000000000000000020 /* Codex Buddy Widget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+		};
+		AA0000000000000000000041 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				AA0000000000000000000021 /* Codex Buddy Watch Widget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		655E41D630317E97000FFB61 /* RUC_Chunhua_Road_39.96777_116.31012.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = RUC_Chunhua_Road_39.96777_116.31012.gpx; path = ../../../../../Desktop/RUC_Chunhua_Road_39.96777_116.31012.gpx; sourceTree = "<group>"; };
+		655F5BA6300A8F3900BE9813 /* Codex Buddy New.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Codex Buddy New.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		655F5BB8300A8F7D00BE9813 /* Codex Buddy Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Codex Buddy Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		655F5BD7300A90E500BE9813 /* Codex Buddy Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Codex Buddy Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000010 /* Codex Buddy Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Codex Buddy Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000011 /* Codex Buddy Watch Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Codex Buddy Watch Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA0000000000000000000080 /* Exceptions for "Codex Buddy Widget" folder in "Codex Buddy Widget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA0000000000000000000060 /* Codex Buddy Widget */;
+		};
+		AA0000000000000000000081 /* Exceptions for "Codex Buddy Watch Widget" folder in "Codex Buddy Watch Widget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA0000000000000000000061 /* Codex Buddy Watch Widget */;
+		};
+		AA0000000000000000000082 /* Exceptions for "Codex Buddy New" folder in "Codex Buddy New" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 655F5BA5300A8F3900BE9813 /* Codex Buddy New */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		655F5BA8300A8F3900BE9813 /* Codex Buddy New */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA0000000000000000000082 /* Exceptions for "Codex Buddy New" folder in "Codex Buddy New" target */,
+			);
+			path = "Codex Buddy New";
+			sourceTree = "<group>";
+		};
+		655F5BB9300A8F7D00BE9813 /* Codex Buddy Watch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Codex Buddy Watch Watch App";
+			sourceTree = "<group>";
+		};
+		655F5BD8300A90E500BE9813 /* Codex Buddy Mac */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Codex Buddy Mac";
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000001 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000002 /* Codex Buddy Widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA0000000000000000000080 /* Exceptions for "Codex Buddy Widget" folder in "Codex Buddy Widget" target */,
+			);
+			path = "Codex Buddy Widget";
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000003 /* Codex Buddy Watch Widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA0000000000000000000081 /* Exceptions for "Codex Buddy Watch Widget" folder in "Codex Buddy Watch Widget" target */,
+			);
+			path = "Codex Buddy Watch Widget";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		655F5BA3300A8F3900BE9813 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		655F5BB5300A8F7D00BE9813 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		655F5BD4300A90E500BE9813 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		AA0000000000000000000050 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		AA0000000000000000000051 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		655F5B9D300A8F3900BE9813 = {
+			isa = PBXGroup;
+			children = (
+				655E41D630317E97000FFB61 /* RUC_Chunhua_Road_39.96777_116.31012.gpx */,
+				655F5BA8300A8F3900BE9813 /* Codex Buddy New */,
+				655F5BB9300A8F7D00BE9813 /* Codex Buddy Watch Watch App */,
+				655F5BD8300A90E500BE9813 /* Codex Buddy Mac */,
+				AA0000000000000000000001 /* Shared */,
+				AA0000000000000000000002 /* Codex Buddy Widget */,
+				AA0000000000000000000003 /* Codex Buddy Watch Widget */,
+				655F5BA7300A8F3900BE9813 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		655F5BA7300A8F3900BE9813 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				655F5BA6300A8F3900BE9813 /* Codex Buddy New.app */,
+				655F5BB8300A8F7D00BE9813 /* Codex Buddy Watch Watch App.app */,
+				655F5BD7300A90E500BE9813 /* Codex Buddy Mac.app */,
+				AA0000000000000000000010 /* Codex Buddy Widget.appex */,
+				AA0000000000000000000011 /* Codex Buddy Watch Widget.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		655F5BA5300A8F3900BE9813 /* Codex Buddy New */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 655F5BB1300A8F3A00BE9813 /* Build configuration list for PBXNativeTarget "Codex Buddy New" */;
+			buildPhases = (
+				655F5BA2300A8F3900BE9813 /* Sources */,
+				655F5BA3300A8F3900BE9813 /* Frameworks */,
+				655F5BA4300A8F3900BE9813 /* Resources */,
+				655F5BC6300A8F7E00BE9813 /* Embed Watch Content */,
+				AA0000000000000000000040 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				655F5BC1300A8F7E00BE9813 /* PBXTargetDependency */,
+				AA0000000000000000000090 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				655F5BA8300A8F3900BE9813 /* Codex Buddy New */,
+				AA0000000000000000000001 /* Shared */,
+			);
+			name = "Codex Buddy New";
+			productName = "Codex Buddy New";
+			productReference = 655F5BA6300A8F3900BE9813 /* Codex Buddy New.app */;
+			productType = "com.apple.product-type.application";
+		};
+		655F5BB7300A8F7D00BE9813 /* Codex Buddy Watch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 655F5BC3300A8F7E00BE9813 /* Build configuration list for PBXNativeTarget "Codex Buddy Watch Watch App" */;
+			buildPhases = (
+				655F5BB4300A8F7D00BE9813 /* Sources */,
+				655F5BB5300A8F7D00BE9813 /* Frameworks */,
+				655F5BB6300A8F7D00BE9813 /* Resources */,
+				AA0000000000000000000041 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA0000000000000000000091 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				655F5BB9300A8F7D00BE9813 /* Codex Buddy Watch Watch App */,
+				AA0000000000000000000001 /* Shared */,
+			);
+			name = "Codex Buddy Watch Watch App";
+			productName = "Codex Buddy Watch Watch App";
+			productReference = 655F5BB8300A8F7D00BE9813 /* Codex Buddy Watch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		655F5BD6300A90E500BE9813 /* Codex Buddy Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 655F5BDF300A90E600BE9813 /* Build configuration list for PBXNativeTarget "Codex Buddy Mac" */;
+			buildPhases = (
+				655F5BD3300A90E500BE9813 /* Sources */,
+				655F5BD4300A90E500BE9813 /* Frameworks */,
+				655F5BD5300A90E500BE9813 /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				655F5BD8300A90E500BE9813 /* Codex Buddy Mac */,
+				AA0000000000000000000001 /* Shared */,
+			);
+			name = "Codex Buddy Mac";
+			productName = "Codex Buddy Mac";
+			productReference = 655F5BD7300A90E500BE9813 /* Codex Buddy Mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AA0000000000000000000060 /* Codex Buddy Widget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000070 /* Build configuration list for PBXNativeTarget "Codex Buddy Widget" */;
+			buildPhases = (
+				AA0000000000000000000052 /* Sources */,
+				AA0000000000000000000050 /* Frameworks */,
+				AA0000000000000000000054 /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA0000000000000000000001 /* Shared */,
+				AA0000000000000000000002 /* Codex Buddy Widget */,
+			);
+			name = "Codex Buddy Widget";
+			productName = "Codex Buddy Widget";
+			productReference = AA0000000000000000000010 /* Codex Buddy Widget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AA0000000000000000000061 /* Codex Buddy Watch Widget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000071 /* Build configuration list for PBXNativeTarget "Codex Buddy Watch Widget" */;
+			buildPhases = (
+				AA0000000000000000000053 /* Sources */,
+				AA0000000000000000000051 /* Frameworks */,
+				AA0000000000000000000055 /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA0000000000000000000001 /* Shared */,
+				AA0000000000000000000003 /* Codex Buddy Watch Widget */,
+			);
+			name = "Codex Buddy Watch Widget";
+			productName = "Codex Buddy Watch Widget";
+			productReference = AA0000000000000000000011 /* Codex Buddy Watch Widget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		655F5B9E300A8F3900BE9813 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					655F5BA5300A8F3900BE9813 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					655F5BB7300A8F7D00BE9813 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					655F5BD6300A90E500BE9813 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					AA0000000000000000000060 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					AA0000000000000000000061 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+				};
+			};
+			buildConfigurationList = 655F5BA1300A8F3900BE9813 /* Build configuration list for PBXProject "Codex Buddy New" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 655F5B9D300A8F3900BE9813;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 655F5BA7300A8F3900BE9813 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				655F5BA5300A8F3900BE9813 /* Codex Buddy New */,
+				655F5BB7300A8F7D00BE9813 /* Codex Buddy Watch Watch App */,
+				655F5BD6300A90E500BE9813 /* Codex Buddy Mac */,
+				AA0000000000000000000060 /* Codex Buddy Widget */,
+				AA0000000000000000000061 /* Codex Buddy Watch Widget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		655F5BA4300A8F3900BE9813 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		655F5BB6300A8F7D00BE9813 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		655F5BD5300A90E500BE9813 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AA0000000000000000000054 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AA0000000000000000000055 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		655F5BA2300A8F3900BE9813 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		655F5BB4300A8F7D00BE9813 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		655F5BD3300A90E500BE9813 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		AA0000000000000000000052 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		AA0000000000000000000053 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		655F5BC1300A8F7E00BE9813 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 655F5BB7300A8F7D00BE9813 /* Codex Buddy Watch Watch App */;
+			targetProxy = 655F5BC0300A8F7E00BE9813 /* PBXContainerItemProxy */;
+		};
+		AA0000000000000000000090 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA0000000000000000000060 /* Codex Buddy Widget */;
+			targetProxy = AA0000000000000000000030 /* PBXContainerItemProxy */;
+		};
+		AA0000000000000000000091 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA0000000000000000000061 /* Codex Buddy Watch Widget */;
+			targetProxy = AA0000000000000000000031 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		655F5BAF300A8F3A00BE9813 /* Debug configuration for PBXProject "Codex Buddy New" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = M5XVXSXTND;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		655F5BB0300A8F3A00BE9813 /* Release configuration for PBXProject "Codex Buddy New" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M5XVXSXTND;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		655F5BB2300A8F3A00BE9813 /* Debug configuration for PBXNativeTarget "Codex Buddy New" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy New/CodexBuddyNew.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = AppIcon.icon;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Codex Buddy New/Info.plist";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		655F5BB3300A8F3A00BE9813 /* Release configuration for PBXNativeTarget "Codex Buddy New" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy New/CodexBuddyNew.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = AppIcon.icon;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Codex Buddy New/Info.plist";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
+		655F5BC4300A8F7E00BE9813 /* Debug configuration for PBXNativeTarget "Codex Buddy Watch Watch App" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Watch Watch App/CodexBuddyWatch.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				ENABLE_PREVIEWS = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = AppIcon.icon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleIconFiles = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = "Codex Buddy Watch";
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Codex Buddy 需要访问局域网以从你的 Mac 刷新状态。";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.danieldev.CodexBuddyNew;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		655F5BC5300A8F7E00BE9813 /* Release configuration for PBXNativeTarget "Codex Buddy Watch Watch App" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Watch Watch App/CodexBuddyWatch.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				ENABLE_PREVIEWS = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = AppIcon.icon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleIconFiles = AppIcon;
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = "Codex Buddy Watch";
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Codex Buddy 需要访问局域网以从你的 Mac 刷新状态。";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.danieldev.CodexBuddyNew;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		655F5BE0300A90E600BE9813 /* Debug configuration for PBXNativeTarget "Codex Buddy Mac" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Mac/CodexBuddyMacDirect.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				EXCLUDED_SOURCE_FILE_NAMES = AppIcon.icon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		655F5BE1300A90E600BE9813 /* Release configuration for PBXNativeTarget "Codex Buddy Mac" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Mac/CodexBuddyMacAppStore.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
+				EXCLUDED_SOURCE_FILE_NAMES = AppIcon.icon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		AA0000000000000000000072 /* Debug configuration for PBXNativeTarget "Codex Buddy Widget" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Widget/CodexBuddyWidget.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Codex Buddy Widget/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA0000000000000000000073 /* Release configuration for PBXNativeTarget "Codex Buddy Widget" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Widget/CodexBuddyWidget.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Codex Buddy Widget/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA0000000000000000000074 /* Debug configuration for PBXNativeTarget "Codex Buddy Watch Widget" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Watch Widget/CodexBuddyWatchWidget.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Codex Buddy Watch Widget/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew.watchkitapp.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000075 /* Release configuration for PBXNativeTarget "Codex Buddy Watch Widget" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = "Codex Buddy Watch Widget/CodexBuddyWatchWidget.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = A47AU67Z4Q;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Codex Buddy Watch Widget/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danieldev.CodexBuddyNew.watchkitapp.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		655F5BA1300A8F3900BE9813 /* Build configuration list for PBXProject "Codex Buddy New" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				655F5BAF300A8F3A00BE9813 /* Debug configuration for PBXProject "Codex Buddy New" */,
+				655F5BB0300A8F3A00BE9813 /* Release configuration for PBXProject "Codex Buddy New" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		655F5BB1300A8F3A00BE9813 /* Build configuration list for PBXNativeTarget "Codex Buddy New" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				655F5BB2300A8F3A00BE9813 /* Debug configuration for PBXNativeTarget "Codex Buddy New" */,
+				655F5BB3300A8F3A00BE9813 /* Release configuration for PBXNativeTarget "Codex Buddy New" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		655F5BC3300A8F7E00BE9813 /* Build configuration list for PBXNativeTarget "Codex Buddy Watch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				655F5BC4300A8F7E00BE9813 /* Debug configuration for PBXNativeTarget "Codex Buddy Watch Watch App" */,
+				655F5BC5300A8F7E00BE9813 /* Release configuration for PBXNativeTarget "Codex Buddy Watch Watch App" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		655F5BDF300A90E600BE9813 /* Build configuration list for PBXNativeTarget "Codex Buddy Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				655F5BE0300A90E600BE9813 /* Debug configuration for PBXNativeTarget "Codex Buddy Mac" */,
+				655F5BE1300A90E600BE9813 /* Release configuration for PBXNativeTarget "Codex Buddy Mac" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000000070 /* Build configuration list for PBXNativeTarget "Codex Buddy Widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000072 /* Debug configuration for PBXNativeTarget "Codex Buddy Widget" */,
+				AA0000000000000000000073 /* Release configuration for PBXNativeTarget "Codex Buddy Widget" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000000071 /* Build configuration list for PBXNativeTarget "Codex Buddy Watch Widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000074 /* Debug configuration for PBXNativeTarget "Codex Buddy Watch Widget" */,
+				AA0000000000000000000075 /* Release configuration for PBXNativeTarget "Codex Buddy Watch Widget" */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 655F5B9E300A8F3900BE9813 /* Project object */;
+	validationLevel = 1;
+}

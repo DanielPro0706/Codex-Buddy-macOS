@@ -1,0 +1,11 @@
+.DS_Store
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.ipa
+*.dmg
+*.xcarchive
+.env*
+*.p8
+*.pem
