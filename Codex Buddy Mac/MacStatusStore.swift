@@ -10,6 +10,8 @@ final class MacStatusStore {
     var statusText = "等待读取"
 
     private var pollingTask: Task<Void, Never>?
+    private var cloudPublishingTask: Task<Void, Never>?
+    private var pendingCloudSnapshot: CodexStatusSnapshot?
     private var server: MacStatusServer?
     private var lastCloudPublishedAt: Date?
     private let reader = LocalCodexStatusReader()
@@ -65,6 +67,10 @@ final class MacStatusStore {
 
         do {
             let newSnapshot = try await reader.read()
+            guard snapshot.map({ newSnapshot.capturedAt >= $0.capturedAt }) ?? true else {
+                statusText = "读取到较旧记录，保留最新额度"
+                return
+            }
             let shouldPublishCloud = Self.shouldPublishCloud(
                 previous: snapshot,
                 lastPublishedAt: lastCloudPublishedAt,
@@ -72,13 +78,28 @@ final class MacStatusStore {
             )
             snapshot = newSnapshot
             CodexStatusCache.save(snapshot: newSnapshot)
-            statusText = "读取成功"
+            statusText = newSnapshot.source == .sessionLog
+                ? "已读取 Codex 日志记录"
+                : "读取成功"
             if shouldPublishCloud {
                 lastCloudPublishedAt = .now
-                Task { await CodexStatusClient.publishToCloud(newSnapshot) }
+                publishToCloud(newSnapshot)
             }
         } catch {
             statusText = error.localizedDescription
+        }
+    }
+
+    private func publishToCloud(_ snapshot: CodexStatusSnapshot) {
+        pendingCloudSnapshot = snapshot
+        guard cloudPublishingTask == nil else { return }
+        cloudPublishingTask = Task { [weak self] in
+            guard let self else { return }
+            defer { cloudPublishingTask = nil }
+            while let next = pendingCloudSnapshot {
+                pendingCloudSnapshot = nil
+                await CodexStatusClient.publishToCloud(next)
+            }
         }
     }
 

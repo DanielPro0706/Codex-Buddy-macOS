@@ -106,7 +106,7 @@ enum CodexFolderAccess {
     }
 }
 
-private nonisolated final class CodexAppServerSession: @unchecked Sendable {
+nonisolated final class CodexAppServerSession: @unchecked Sendable {
     private let process = Process()
     private let standardInput = Pipe()
     private let standardOutput = Pipe()
@@ -114,17 +114,18 @@ private nonisolated final class CodexAppServerSession: @unchecked Sendable {
     private let continuation: AsyncStream<Data>.Continuation
     private var requestID = 0
 
-    init() throws {
+    init(executableURL: URL? = nil) throws {
         var streamContinuation: AsyncStream<Data>.Continuation!
         let stream = AsyncStream<Data> { streamContinuation = $0 }
         continuation = streamContinuation
         messages = stream
 
-        process.executableURL = URL(fileURLWithPath: try Self.codexExecutable())
+        process.executableURL = try executableURL ?? URL(fileURLWithPath: Self.codexExecutable())
         process.arguments = ["-s", "read-only", "-a", "never", "app-server"]
         process.standardInput = standardInput
         process.standardOutput = standardOutput
-        process.standardError = Pipe()
+        // An unread pipe fills with app-server diagnostics and blocks the RPC response.
+        process.standardError = FileHandle.nullDevice
 
         let buffer = NewlineMessageBuffer()
         let continuation = continuation
@@ -200,11 +201,7 @@ private nonisolated final class CodexAppServerSession: @unchecked Sendable {
     }
 
     private static func codexExecutable() throws -> String {
-        let candidates = [
-            "/Applications/ChatGPT.app/Contents/Resources/codex",
-            "/opt/homebrew/bin/codex",
-            "/usr/local/bin/codex"
-        ]
+        let candidates = CodexExecutableLocator.candidates
         guard let path = candidates.first(where: FileManager.default.isExecutableFile(atPath:)) else {
             throw LocalCodexStatusError.executableNotFound
         }
@@ -291,7 +288,18 @@ private nonisolated final class NewlineMessageBuffer: @unchecked Sendable {
     }
 }
 
-private nonisolated enum LocalCodexSessionLog {
+nonisolated enum CodexExecutableLocator {
+    static let candidates = [
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+        "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+        "/Applications/ChatGPT.app/Contents/Resources/codex",
+        "/Applications/Codex.app/Contents/Resources/codex",
+        "/opt/homebrew/bin/codex",
+        "/usr/local/bin/codex"
+    ]
+}
+
+nonisolated enum LocalCodexSessionLog {
     static func latestSnapshot() -> CodexStatusSnapshot? {
         latestSnapshot(
             in: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".codex")
@@ -310,14 +318,22 @@ private nonisolated enum LocalCodexSessionLog {
 
         let candidates = enumerator.compactMap { $0 as? URL }
             .filter { $0.pathExtension == "jsonl" }
+            .map { (url: $0, modifiedAt: modificationDate($0)) }
             .sorted { lhs, rhs in
-                modificationDate(lhs) > modificationDate(rhs)
+                lhs.modifiedAt > rhs.modifiedAt
             }
 
-        for url in candidates.prefix(10) {
-            if let snapshot = snapshot(in: url) { return snapshot }
+        var newest: CodexStatusSnapshot?
+        for candidate in candidates {
+            // A rate-limit event cannot be newer than the last write to its log.
+            // Once older files are reached, avoid rereading the entire history.
+            if let newest, candidate.modifiedAt < newest.capturedAt { break }
+            if let snapshot = snapshot(in: candidate.url),
+               newest.map({ snapshot.capturedAt > $0.capturedAt }) ?? true {
+                newest = snapshot
+            }
         }
-        return nil
+        return newest
     }
 
     private static func modificationDate(_ url: URL) -> Date {
@@ -333,6 +349,9 @@ private nonisolated enum LocalCodexSessionLog {
         guard let data = try? handle.read(upToCount: Int(count)),
               let text = String(data: data, encoding: .utf8) else { return nil }
 
+        let fractionalDateFormatter = ISO8601DateFormatter()
+        fractionalDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let dateFormatter = ISO8601DateFormatter()
         for line in text.split(separator: "\n").reversed() {
             guard let data = line.data(using: .utf8),
                   let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -355,8 +374,9 @@ private nonisolated enum LocalCodexSessionLog {
                 )
             }
             guard !windows.isEmpty else { continue }
-            let capturedAt = (root["timestamp"] as? String)
-                .flatMap { ISO8601DateFormatter().date(from: $0) } ?? .now
+            guard let timestamp = root["timestamp"] as? String,
+                  let capturedAt = fractionalDateFormatter.date(from: timestamp)
+                    ?? dateFormatter.date(from: timestamp) else { continue }
             return CodexStatusSnapshot(
                 windows: windows,
                 planName: limits["plan_type"] as? String,

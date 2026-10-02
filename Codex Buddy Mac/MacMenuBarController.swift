@@ -9,9 +9,17 @@ final class MacLifecycleDelegate: NSObject, NSApplicationDelegate {
     let dockVisibilityController = MainWindowDockVisibilityController()
     let updateChecker = MacUpdateChecker()
     private var menuBarController: MacMenuBarController?
+    private var wakeObserver: NSObjectProtocol?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         store.start()
+        wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didWakeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in await self?.store.refresh() }
+        }
         updateChecker.startAutomaticCheck()
         menuBarController = MacMenuBarController(
             store: store,
@@ -23,6 +31,16 @@ final class MacLifecycleDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
+    }
+
+    func applicationDidBecomeActive(_ notification: Notification) {
+        Task { await store.refresh() }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        if let wakeObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver)
+        }
     }
 }
 
