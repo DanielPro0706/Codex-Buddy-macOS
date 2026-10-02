@@ -201,8 +201,7 @@ nonisolated final class CodexAppServerSession: @unchecked Sendable {
     }
 
     private static func codexExecutable() throws -> String {
-        let candidates = CodexExecutableLocator.candidates
-        guard let path = candidates.first(where: FileManager.default.isExecutableFile(atPath:)) else {
+        guard let path = CodexExecutableLocator.firstExecutablePath() else {
             throw LocalCodexStatusError.executableNotFound
         }
         return path
@@ -297,6 +296,10 @@ nonisolated enum CodexExecutableLocator {
         "/opt/homebrew/bin/codex",
         "/usr/local/bin/codex"
     ]
+
+    static func firstExecutablePath(in paths: [String] = candidates) -> String? {
+        paths.first(where: FileManager.default.isExecutableFile(atPath:))
+    }
 }
 
 nonisolated enum LocalCodexSessionLog {

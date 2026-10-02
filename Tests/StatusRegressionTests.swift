@@ -65,8 +65,24 @@ struct StatusRegressionTests {
         assert(Date.now.timeIntervalSince(start) < 5, "diagnostic output must not fill a pipe and block the response")
         print("PASS: 256 KiB of app-server stderr cannot block a live RPC response")
 
-        let selected = CodexExecutableLocator.candidates.first(where: FileManager.default.isExecutableFile(atPath:))
-        assert(selected != nil, "installed Codex CLI must be found on this Mac")
-        print("PASS: current bundled Codex CLI discovered")
+        // A Cloud worker does not have ChatGPT/Codex installed. Exercise the
+        // production search against temporary copies of its candidate paths.
+        let bundledPath = "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
+        assert(CodexExecutableLocator.candidates.first == bundledPath)
+        let fixturePaths = CodexExecutableLocator.candidates.map {
+            root.appending(path: String($0.dropFirst())).path
+        }
+        for index in [0, fixturePaths.count - 1] {
+            let fixture = URL(filePath: fixturePaths[index])
+            try FileManager.default.createDirectory(at: fixture.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try Data("#!/bin/sh\nexit 0\n".utf8).write(to: fixture)
+            try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: fixture.path)
+        }
+        assert(CodexExecutableLocator.firstExecutablePath(in: fixturePaths) == fixturePaths[0], "current bundled CLI must take priority over fallback installations")
+        try FileManager.default.removeItem(atPath: fixturePaths[0])
+        assert(CodexExecutableLocator.firstExecutablePath(in: fixturePaths) == fixturePaths.last, "a missing bundle must use an executable fallback")
+        try FileManager.default.removeItem(atPath: fixturePaths.last!)
+        assert(CodexExecutableLocator.firstExecutablePath(in: fixturePaths) == nil, "a worker without Codex must report absence without requiring an installation")
+        print("PASS: bundled CLI priority, executable fallback and absence use temporary fixtures")
     }
 }
