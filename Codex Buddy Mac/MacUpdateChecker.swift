@@ -14,7 +14,7 @@ final class MacUpdateChecker {
     }
 
     /// The public GitHub Release is the single source of truth for web-distributed builds.
-    private static let releasesURL = URL(string: "https://api.github.com/repos/DanielPro0706/Codex-Buddy/releases/latest")!
+    private static let releasesURL = URL(string: "https://api.github.com/repos/DanielPro0706/Codex-Buddy-macOS/releases/latest")!
     private static let macDMGAssetName = "Codex-Buddy-Mac.dmg"
 
     private(set) var state: State = .idle

@@ -8,12 +8,12 @@ final class MacStatusStore {
     var snapshot: CodexStatusSnapshot?
     var isRefreshing = false
     var statusText = "等待读取"
+    var cloudStatus: CodexCloudSync.OperationStatus = .notChecked
 
     private var pollingTask: Task<Void, Never>?
     private var cloudPublishingTask: Task<Void, Never>?
     private var pendingCloudSnapshot: CodexStatusSnapshot?
     private var server: MacStatusServer?
-    private var lastCloudPublishedAt: Date?
     private let reader = LocalCodexStatusReader()
 
     init(previewSnapshot: CodexStatusSnapshot? = nil) {
@@ -71,20 +71,12 @@ final class MacStatusStore {
                 statusText = "读取到较旧记录，保留最新额度"
                 return
             }
-            let shouldPublishCloud = Self.shouldPublishCloud(
-                previous: snapshot,
-                lastPublishedAt: lastCloudPublishedAt,
-                next: newSnapshot
-            )
             snapshot = newSnapshot
             CodexStatusCache.save(snapshot: newSnapshot)
             statusText = newSnapshot.source == .sessionLog
                 ? "已读取 Codex 日志记录"
                 : "读取成功"
-            if shouldPublishCloud {
-                lastCloudPublishedAt = .now
-                publishToCloud(newSnapshot)
-            }
+            publishToCloud(newSnapshot)
         } catch {
             statusText = error.localizedDescription
         }
@@ -98,22 +90,10 @@ final class MacStatusStore {
             defer { cloudPublishingTask = nil }
             while let next = pendingCloudSnapshot {
                 pendingCloudSnapshot = nil
-                await CodexStatusClient.publishToCloud(next)
+                cloudStatus = .checking
+                cloudStatus = await CodexStatusClient.publishToCloud(next)
             }
         }
-    }
-
-    private static func shouldPublishCloud(
-        previous: CodexStatusSnapshot?,
-        lastPublishedAt: Date?,
-        next: CodexStatusSnapshot
-    ) -> Bool {
-        guard let previous else { return true }
-        let valuesChanged = previous.windows != next.windows
-            || previous.planName != next.planName
-            || previous.creditsBalance != next.creditsBalance
-            || previous.resetCredits != next.resetCredits
-        return valuesChanged || lastPublishedAt.map { Date.now.timeIntervalSince($0) >= 5 * 60 } ?? true
     }
 
     private var localBaseURL: URL {

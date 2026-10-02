@@ -90,7 +90,10 @@ struct MacOverviewView: View {
                     isStale: store.snapshot?.isStale ?? false
                 )
 
-                MacStatusGlassContent(snapshot: store.snapshot)
+                MacStatusGlassContent(
+                    snapshot: store.snapshot,
+                    cloudStatus: store.cloudStatus
+                )
 
                 HStack {
                     Label(store.statusText, systemImage: store.isRefreshing ? "arrow.trianglehead.2.clockwise.rotate.90" : "circle.fill")
@@ -112,6 +115,7 @@ struct MacOverviewView: View {
 
 private struct MacStatusGlassContent: View {
     let snapshot: CodexStatusSnapshot?
+    let cloudStatus: CodexCloudSync.OperationStatus
 
     var body: some View {
         GlassEffectContainer(spacing: 18) {
@@ -169,6 +173,12 @@ private struct MacStatusGlassContent: View {
                         in: RoundedRectangle(cornerRadius: 24, style: .continuous)
                     )
                 }
+
+                CodexCloudStatusView(status: cloudStatus)
+                    .glassEffect(
+                        .regular,
+                        in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+                    )
             }
         }
     }
@@ -292,6 +302,15 @@ private struct MenuBarSettingsView: View {
             }
 
             Section {
+                CodexCloudStatusView(status: store.cloudStatus, compact: true)
+                    .padding(.horizontal, -12)
+            } header: {
+                Text("iCloud 同步")
+            } footer: {
+                Text("Mac 每次成功读取 Codex 状态后都会上传一次 iCloud；iPhone 使用同一 Apple Account 时可读取最新状态。")
+            }
+
+            Section {
                 LabeledContent("当前版本") {
                     Text(updateChecker.installedVersionDescription)
                         .foregroundStyle(.secondary)
@@ -351,6 +370,14 @@ struct MacMenuContent: View {
                     .frame(maxWidth: .infinity, minHeight: 80)
                     .foregroundStyle(.secondary)
             }
+
+            CodexCloudStatusView(status: store.cloudStatus, compact: true)
+                .padding(.horizontal, 1)
+                .padding(.vertical, 2)
+                .background(
+                    .quaternary.opacity(0.45),
+                    in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+                )
 
             Divider()
 
@@ -490,7 +517,7 @@ private struct MacMenuHeader: View {
                 HStack(spacing: 4) {
                     Image(systemName: isStale ? "exclamationmark.triangle.fill" : "clock.arrow.circlepath")
                     if isStale {
-                        Text("缓存数据")
+                        Text("状态可能已过期")
                     } else {
                         Text("更新于")
                     }
@@ -572,8 +599,8 @@ private struct MacCreditsBalanceRow: View {
             Spacer(minLength: 12)
 
             Text(balance)
-                .font(menuStyle ? .title2.bold().monospacedDigit() : .title3.monospacedDigit())
-                .fontWeight(menuStyle ? .bold : .semibold)
+                .font(menuStyle ? .title2.monospacedDigit() : .title3.monospacedDigit())
+                .fontWeight(menuStyle ? .regular : .semibold)
                 .foregroundStyle(.primary)
         }
         .padding(.horizontal, menuStyle ? 13 : 18)

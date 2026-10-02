@@ -13,11 +13,11 @@ Codex Buddy 是一款原生 SwiftUI 菜单栏应用，用于在 Mac 上读取本
 - App Store 沙盒版支持手动授权 `.codex` 文件夹
 - 直接分发版可通过本机 `codex app-server` 读取状态，并回退到本地会话日志
 
-当前公开版本：`1.0.4`（Build `6`）。GitHub Release 中的 DMG 是直接分发版；App Store 版本通过 App Store Connect 单独发布。
+本次发行候选版本：`1.1.1`（Build `10`）。本仓库只包含 macOS App 与 Mac 所需的同步、状态模型和界面代码，不包含 iOS/watchOS App、Widget、资源或构建目标。GitHub DMG 为直接分发版。
 
 ## 构建
 
-1. 使用 Xcode 26.6 或兼容的稳定版本打开 `Codex Buddy.xcodeproj`。
+1. 使用 Xcode 27.1 或兼容版本打开 `Codex Buddy.xcodeproj`。
 2. 选择 `Codex Buddy Mac` scheme。
 3. 如需自己的签名与 iCloud，请替换 Team、Bundle Identifier、App Group 和 CloudKit Container。
 4. Debug 配置对应直接分发能力；Release 配置对应 Mac App Store 沙盒能力。
@@ -31,3 +31,7 @@ Codex Buddy 是一款原生 SwiftUI 菜单栏应用，用于在 Mac 上读取本
 ## License
 
 MIT License。详见 [LICENSE](LICENSE)。
+
+## 直接分发构建
+
+Release 配置可用 `CODE_SIGN_ENTITLEMENTS="Codex Buddy Mac/CodexBuddyMacDirect.entitlements"` 构建直接分发版。正式 DMG 使用 Developer ID 签名，并在 Apple 公证及 staple、Gatekeeper 验证通过后发布。

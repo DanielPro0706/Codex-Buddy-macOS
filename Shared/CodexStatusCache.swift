@@ -4,7 +4,6 @@ nonisolated enum CodexStatusCache {
     static let appGroupIdentifier = "group.com.danieldev.CodexBuddyNew"
 
     private static let snapshotKey = "codex.status.snapshot.v1"
-    private static let connectionKey = "codex.status.connection.v1"
     private static let pushSecretKey = "codex.push.secret.v1"
 
     private static var defaults: UserDefaults {
@@ -21,26 +20,6 @@ nonisolated enum CodexStatusCache {
         defaults.set(data, forKey: snapshotKey)
     }
 
-    static func loadConnection() -> MacConnection? {
-        guard let data = defaults.data(forKey: connectionKey) else { return nil }
-        return try? decoder.decode(MacConnection.self, from: data)
-    }
-
-    static func save(connection: MacConnection) {
-        guard let data = try? encoder.encode(connection) else { return }
-        defaults.set(data, forKey: connectionKey)
-    }
-
-    static func clearConnection() {
-        defaults.removeObject(forKey: connectionKey)
-    }
-
-    static func clearAll() {
-        defaults.removeObject(forKey: snapshotKey)
-        defaults.removeObject(forKey: connectionKey)
-        defaults.removeObject(forKey: pushSecretKey)
-    }
-
     static func loadPushSecret() -> String? {
         defaults.string(forKey: pushSecretKey)
     }
@@ -52,10 +31,6 @@ nonisolated enum CodexStatusCache {
         let secret = Data(bytes).base64EncodedString()
         defaults.set(secret, forKey: pushSecretKey)
         return secret
-    }
-
-    static func savePushSecret(_ secret: String) {
-        defaults.set(secret, forKey: pushSecretKey)
     }
 
     static let encoder: JSONEncoder = {

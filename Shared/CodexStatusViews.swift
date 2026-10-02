@@ -348,7 +348,7 @@ struct CodexSnapshotHeader: View {
                     Image(systemName: isStale ? "exclamationmark.triangle.fill" : "clock.arrow.circlepath")
                         .foregroundStyle(isStale ? .orange : .secondary)
                     if isStale {
-                        Text("缓存数据")
+                        Text("状态可能已过期")
                     } else {
                         Text("更新于")
                     }
@@ -360,5 +360,83 @@ struct CodexSnapshotHeader: View {
             }
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+struct CodexCloudStatusView: View {
+    let status: CodexCloudSync.OperationStatus
+    var compact = false
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            statusLabel
+            Spacer(minLength: 8)
+            if case let .synced(date) = status {
+                Text(date, style: .time)
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .font(compact ? .subheadline : .body)
+        .padding(compact ? 12 : 16)
+        .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private var statusLabel: some View {
+        switch status {
+        case .notChecked:
+            Label("尚未检查 iCloud", systemImage: "icloud")
+                .foregroundStyle(.secondary)
+        case .checking:
+            Label("正在连接 iCloud", systemImage: "arrow.trianglehead.2.clockwise.rotate.90")
+                .foregroundStyle(.secondary)
+        case .synced:
+            Label("iCloud 已连接 · 同步成功", systemImage: "checkmark.icloud.fill")
+                .foregroundStyle(.green)
+        case .connectedWithoutData:
+            Label("iCloud 已连接 · 暂无云端状态", systemImage: "icloud")
+                .foregroundStyle(.blue)
+        case .unavailable(.noAccount):
+            Label("未连接 iCloud · 请登录同一 Apple Account", systemImage: "person.crop.circle.badge.exclamationmark")
+                .foregroundStyle(.orange)
+        case .unavailable(.restricted):
+            Label("iCloud 访问受限", systemImage: "lock.icloud")
+                .foregroundStyle(.orange)
+        case .unavailable(.temporarilyUnavailable):
+            Label("iCloud 暂时不可用", systemImage: "icloud.slash")
+                .foregroundStyle(.orange)
+        case .unavailable(.couldNotDetermine), .unavailable(.unknown):
+            Label("无法确认 iCloud 登录状态", systemImage: "questionmark.diamond")
+                .foregroundStyle(.orange)
+        case .unavailable(.checking):
+            Label("正在检查 iCloud", systemImage: "arrow.trianglehead.2.clockwise.rotate.90")
+                .foregroundStyle(.secondary)
+        case .unavailable(.available):
+            Label("iCloud 已连接", systemImage: "icloud.fill")
+                .foregroundStyle(.blue)
+        case .failed(.network):
+            Label("iCloud 网络连接失败，将自动重试", systemImage: "wifi.exclamationmark")
+                .foregroundStyle(.orange)
+        case .failed(.permission):
+            Label("iCloud 容器权限不匹配", systemImage: "lock.trianglebadge.exclamationmark")
+                .foregroundStyle(.red)
+        case .failed(.configuration):
+            Label("iCloud Production 配置未完成", systemImage: "exclamationmark.icloud.fill")
+                .foregroundStyle(.red)
+        case .failed(.rateLimited):
+            Label("iCloud 请求过于频繁，将自动重试", systemImage: "clock.badge.exclamationmark")
+                .foregroundStyle(.orange)
+        case .failed(.unavailable):
+            Label("iCloud 服务不可用，将自动重试", systemImage: "icloud.slash")
+                .foregroundStyle(.orange)
+        case let .failed(.unknown(message)):
+            Label {
+                Text("iCloud 同步失败：\(message)")
+            } icon: {
+                Image(systemName: "exclamationmark.icloud.fill")
+            }
+            .foregroundStyle(.red)
+        }
     }
 }
