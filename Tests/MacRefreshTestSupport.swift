@@ -6,15 +6,39 @@ import Network
     static var next = CodexStatusSnapshot.preview
     static var saved: CodexStatusSnapshot?
     static var reads = 0
+    static var suspends = 0
+    static var keepAliveReads: [Bool] = []
+    static var environment = MacRefreshEnvironment(allDisplaysAsleep: false, activity: .inactive)
+    static var monitors: [MacRefreshEnvironmentMonitor] = []
     static var published: [CodexStatusSnapshot] = []
     static var cloudContinuations: [CheckedContinuation<Void, Never>] = []
 }
 actor LocalCodexStatusReader {
-    func read() async throws -> CodexStatusSnapshot {
+    func read(keepingSessionAlive: Bool = true) async throws -> CodexStatusSnapshot {
         await MainActor.run {
             RefreshTestState.reads += 1
+            RefreshTestState.keepAliveReads.append(keepingSessionAlive)
             return RefreshTestState.next
         }
+    }
+    func suspend() async {
+        await MainActor.run { RefreshTestState.suspends += 1 }
+    }
+}
+@MainActor final class MacRefreshEnvironmentMonitor {
+    private var onChange: ((MacRefreshEnvironment) -> Void)?
+    init(codexHome: URL? = nil, activityMonitoringEnabled: Bool = true) {}
+    var current: MacRefreshEnvironment { RefreshTestState.environment }
+    func start(onChange: @escaping @MainActor (MacRefreshEnvironment) -> Void) {
+        self.onChange = onChange
+        RefreshTestState.monitors.append(self)
+        onChange(current)
+    }
+    func stop() { onChange = nil }
+    func refresh() async { onChange?(current) }
+    func simulate(_ environment: MacRefreshEnvironment) {
+        RefreshTestState.environment = environment
+        onChange?(environment)
     }
 }
 enum CodexStatusCache {
@@ -44,6 +68,7 @@ final class MacStatusServer {
     static let port = NWEndpoint.Port(rawValue: 48219)!
     init(token: String, snapshotProvider: @escaping @MainActor @Sendable () -> CodexStatusSnapshot?) {}
     func start() throws {}
+    func stop() {}
 }
 final class MacNavigationModel {}
 final class MainWindowDockVisibilityController {}

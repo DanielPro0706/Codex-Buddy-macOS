@@ -6,7 +6,7 @@ struct StatusRegressionTests {
         let root = FileManager.default.temporaryDirectory.appending(path: "codexbuddy-tests-\(UUID())")
         let sessions = root.appending(path: "sessions")
         try FileManager.default.createDirectory(at: sessions, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: root) }
+        defer { print("Retained status fixtures: \(root.path)") }
         let fresh = Date(timeIntervalSince1970: 1_790_956_800)
         let old = fresh.addingTimeInterval(-3_600)
         let touched = fresh.addingTimeInterval(600)
@@ -79,9 +79,15 @@ struct StatusRegressionTests {
             try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: fixture.path)
         }
         assert(CodexExecutableLocator.firstExecutablePath(in: fixturePaths) == fixturePaths[0], "current bundled CLI must take priority over fallback installations")
-        try FileManager.default.removeItem(atPath: fixturePaths[0])
+        try FileManager.default.moveItem(
+            atPath: fixturePaths[0],
+            toPath: root.appending(path: "retained-bundled-cli").path
+        )
         assert(CodexExecutableLocator.firstExecutablePath(in: fixturePaths) == fixturePaths.last, "a missing bundle must use an executable fallback")
-        try FileManager.default.removeItem(atPath: fixturePaths.last!)
+        try FileManager.default.moveItem(
+            atPath: fixturePaths.last!,
+            toPath: root.appending(path: "retained-fallback-cli").path
+        )
         assert(CodexExecutableLocator.firstExecutablePath(in: fixturePaths) == nil, "a worker without Codex must report absence without requiring an installation")
         print("PASS: bundled CLI priority, executable fallback and absence use temporary fixtures")
     }

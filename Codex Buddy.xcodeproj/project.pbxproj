@@ -22,13 +22,13 @@
 			"isa" = "XCBuildConfiguration";
 			"buildSettings" = {
 				"INFOPLIST_KEY_LSUIElement" = "YES";
-				"MARKETING_VERSION" = "1.1.1";
+				"MARKETING_VERSION" = "1.1.2";
 				"ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS" = "YES";
 				"DEVELOPMENT_TEAM" = "A47AU67Z4Q";
 				"CODE_SIGN_ENTITLEMENTS" = "Codex Buddy Mac/CodexBuddyMacDirect.entitlements";
 				"COMBINE_HIDPI_IMAGES" = "YES";
 				"PRODUCT_BUNDLE_IDENTIFIER" = "com.danieldev.CodexBuddyNew";
-				"CURRENT_PROJECT_VERSION" = "10";
+				"CURRENT_PROJECT_VERSION" = "11";
 				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
 				"REGISTER_APP_GROUPS" = "YES";
 				"STRING_CATALOG_GENERATE_SYMBOLS" = "YES";
@@ -69,7 +69,7 @@
 			"isa" = "XCBuildConfiguration";
 			"buildSettings" = {
 				"INFOPLIST_KEY_LSUIElement" = "YES";
-				"MARKETING_VERSION" = "1.1.1";
+				"MARKETING_VERSION" = "1.1.2";
 				"ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS" = "YES";
 				"DEVELOPMENT_TEAM" = "A47AU67Z4Q";
 				"CODE_SIGN_ENTITLEMENTS" = "Codex Buddy Mac/CodexBuddyMacAppStore.entitlements";
@@ -77,7 +77,7 @@
 				"PRODUCT_BUNDLE_IDENTIFIER" = "com.danieldev.CodexBuddyNew";
 				"COMBINE_HIDPI_IMAGES" = "YES";
 				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
-				"CURRENT_PROJECT_VERSION" = "10";
+				"CURRENT_PROJECT_VERSION" = "11";
 				"REGISTER_APP_GROUPS" = "YES";
 				"STRING_CATALOG_GENERATE_SYMBOLS" = "YES";
 				"MACOSX_DEPLOYMENT_TARGET" = "26.0";

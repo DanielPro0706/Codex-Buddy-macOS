@@ -20,6 +20,8 @@ final class MacUpdateChecker {
     private(set) var state: State = .idle
     private var automaticCheckTask: Task<Void, Never>?
 
+    var usesMacAppStoreUpdates: Bool { CodexFolderAccess.isSandboxed }
+
     var installedVersionDescription: String {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"
@@ -27,7 +29,7 @@ final class MacUpdateChecker {
     }
 
     func startAutomaticCheck() {
-        guard automaticCheckTask == nil else { return }
+        guard !usesMacAppStoreUpdates, automaticCheckTask == nil else { return }
         automaticCheckTask = Task { [weak self] in
             try? await Task.sleep(for: .seconds(2))
             guard !Task.isCancelled else { return }
@@ -36,7 +38,7 @@ final class MacUpdateChecker {
     }
 
     func checkForUpdates() async {
-        guard state != .checking else { return }
+        guard !usesMacAppStoreUpdates, state != .checking else { return }
         state = .checking
 
         do {
@@ -75,7 +77,7 @@ final class MacUpdateChecker {
     }
 
     func openDownload(for release: GitHubRelease) {
-        guard let url = release.assets.first?.browserDownloadURL else { return }
+        guard !usesMacAppStoreUpdates, let url = release.assets.first?.browserDownloadURL else { return }
         NSWorkspace.shared.open(url)
     }
 

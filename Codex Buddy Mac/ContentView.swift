@@ -316,11 +316,18 @@ private struct MenuBarSettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                UpdateStatusView(updateChecker: updateChecker)
+                if updateChecker.usesMacAppStoreUpdates {
+                    Text("此版本通过 Mac App Store 更新。")
+                        .foregroundStyle(.secondary)
+                } else {
+                    UpdateStatusView(updateChecker: updateChecker)
+                }
             } header: {
                 Text("软件更新")
             } footer: {
-                Text("Codex Buddy 会在启动后检查 GitHub 上的最新 macOS 完整版。")
+                Text(updateChecker.usesMacAppStoreUpdates
+                    ? "请使用 Mac App Store 的更新功能更新此应用。"
+                    : "Codex Buddy 会在启动后检查 GitHub 上的最新 macOS 完整版。")
             }
 
         }
@@ -407,11 +414,13 @@ struct MacMenuContent: View {
                 }
                 .help("设置")
 
-                Button("检查更新", systemImage: "arrow.triangle.2.circlepath") {
-                    Task { await updateChecker.checkForUpdates() }
+                if !updateChecker.usesMacAppStoreUpdates {
+                    Button("检查更新", systemImage: "arrow.triangle.2.circlepath") {
+                        Task { await updateChecker.checkForUpdates() }
+                    }
+                    .disabled(updateChecker.state == .checking)
+                    .help("检查更新")
                 }
-                .disabled(updateChecker.state == .checking)
-                .help("检查更新")
 
                 Button("退出", systemImage: "power") {
                     NSApplication.shared.terminate(nil)

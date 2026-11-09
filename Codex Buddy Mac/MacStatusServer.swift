@@ -27,6 +27,11 @@ final class MacStatusServer: @unchecked Sendable {
         self.listener = listener
     }
 
+    func stop() {
+        listener?.cancel()
+        listener = nil
+    }
+
     private func accept(_ connection: NWConnection) {
         connection.start(queue: queue)
         connection.receive(minimumIncompleteLength: 1, maximumLength: 65_536) { [weak self] data, _, _, error in

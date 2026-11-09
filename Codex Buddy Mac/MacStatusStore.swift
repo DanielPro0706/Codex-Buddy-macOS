@@ -1,10 +1,11 @@
 import Foundation
 import Network
 import Observation
+import OSLog
 
 @Observable
 final class MacStatusStore {
-    private static let automaticRefreshInterval: Duration = .seconds(15)
+    private static let logger = Logger(subsystem: "com.danieldev.CodexBuddyNew", category: "refreshPolicy")
     var snapshot: CodexStatusSnapshot?
     var isRefreshing = false
     var statusText = "等待读取"
@@ -15,6 +16,14 @@ final class MacStatusStore {
     private var pendingCloudSnapshot: CodexStatusSnapshot?
     private var server: MacStatusServer?
     private let reader = LocalCodexStatusReader()
+    @ObservationIgnored private let environmentMonitor = MacRefreshEnvironmentMonitor(
+        activityMonitoringEnabled: !CodexFolderAccess.isSandboxed
+    )
+    @ObservationIgnored private var refreshPolicy = MacRefreshPolicy()
+    @ObservationIgnored private var pollingGeneration = 0
+    @ObservationIgnored private var pollingKeepsSessionAlive = true
+    @ObservationIgnored private var started = false
+    @ObservationIgnored private var lastLoggedPolicy: String?
 
     init(previewSnapshot: CodexStatusSnapshot? = nil) {
         snapshot = previewSnapshot ?? CodexStatusCache.loadSnapshot()
@@ -48,15 +57,96 @@ final class MacStatusStore {
     }
 
     func start() {
-        guard pollingTask == nil else { return }
+        guard !started else { return }
+        started = true
         startServer()
-        pollingTask = Task { [weak self] in
+        environmentMonitor.start { [weak self] environment in
+            self?.environmentDidChange(environment)
+        }
+        restartPolling(immediately: refreshPolicy.phase == .normal)
+    }
+
+    func stop() {
+        started = false
+        pollingGeneration += 1
+        pollingTask?.cancel()
+        pollingTask = nil
+        environmentMonitor.stop()
+        server?.stop()
+        server = nil
+        cloudPublishingTask?.cancel()
+        pendingCloudSnapshot = nil
+        Task { [reader] in await reader.suspend() }
+    }
+
+    private func environmentDidChange(_ environment: MacRefreshEnvironment) {
+        let previous = refreshPolicy.environment
+        let previousInterval = refreshPolicy.interval
+        refreshPolicy.update(environment: environment)
+        guard started, pollingTask != nil else { return }
+        let displayWoke = previous.allDisplaysAsleep && !environment.allDisplaysAsleep
+        if previousInterval != refreshPolicy.interval || displayWoke {
+            restartPolling(immediately: refreshPolicy.phase == .normal)
+        }
+    }
+
+    private func restartPolling(immediately: Bool) {
+        logRefreshPolicy()
+        let previousTask = pollingTask
+        let previousKeptSessionAlive = pollingKeepsSessionAlive
+        previousTask?.cancel()
+        pollingGeneration += 1
+        let generation = pollingGeneration
+        pollingKeepsSessionAlive = refreshPolicy.phase == .normal
+        let keepsSessionAlive = pollingKeepsSessionAlive
+        pollingTask = Task { [weak self, previousTask] in
             guard let self else { return }
-            while !Task.isCancelled {
+            // Closing the quota client also stops the CLI's autonomous catalog
+            // workers while the displays are off and conversations are idle.
+            if !keepsSessionAlive || !previousKeptSessionAlive {
+                await reader.suspend()
+            }
+            await previousTask?.value
+            var shouldWait = !immediately
+            while started && !Task.isCancelled && pollingGeneration == generation {
+                if shouldWait {
+                    do {
+                        try await Task.sleep(for: refreshPolicy.nextDelay())
+                    } catch {
+                        return
+                    }
+                }
+                guard started, !Task.isCancelled, pollingGeneration == generation else { return }
+                if refreshPolicy.phase != .normal {
+                    // The hourly phase requires a fresh local environment check;
+                    // normal 15-second reads rely on the event-driven monitor.
+                    await environmentMonitor.refresh()
+                    guard !Task.isCancelled, pollingGeneration == generation else { return }
+                }
+                refreshPolicy.didPerformScheduledCheck(environment: environmentMonitor.current)
+                logRefreshPolicy()
                 await refresh()
-                try? await Task.sleep(for: Self.automaticRefreshInterval)
+                shouldWait = true
             }
         }
+    }
+
+    private func logRefreshPolicy() {
+        let phase = String(describing: refreshPolicy.phase)
+        let seconds = refreshPolicy.interval.components.seconds
+        let marker = "\(phase):\(seconds)"
+        guard marker != lastLoggedPolicy else { return }
+        lastLoggedPolicy = marker
+        Self.logger.info("Quota refresh mode=\(phase, privacy: .public) intervalSeconds=\(seconds, privacy: .public)")
+    }
+
+    /// A maintenance wake can leave every display asleep. Only a genuine normal
+    /// environment should bypass the existing idle deadline.
+    func refreshForWake() async {
+        guard started else { return }
+        await environmentMonitor.refresh()
+        guard started, refreshPolicy.phase == .normal else { return }
+        await refresh()
     }
 
     func refresh() async {
@@ -66,7 +156,8 @@ final class MacStatusStore {
         defer { isRefreshing = false }
 
         do {
-            let newSnapshot = try await reader.read()
+            let newSnapshot = try await reader.read(keepingSessionAlive: refreshPolicy.phase == .normal)
+            try Task.checkCancellation()
             guard snapshot.map({ newSnapshot.capturedAt >= $0.capturedAt }) ?? true else {
                 statusText = "读取到较旧记录，保留最新额度"
                 return
@@ -77,6 +168,8 @@ final class MacStatusStore {
                 ? "已读取 Codex 日志记录"
                 : "读取成功"
             publishToCloud(newSnapshot)
+        } catch is CancellationError {
+            return
         } catch {
             statusText = error.localizedDescription
         }

@@ -1,5 +1,7 @@
 import AppKit
+import Darwin
 import Foundation
+import OSLog
 
 enum LocalCodexStatusError: LocalizedError {
     case executableNotFound
@@ -22,7 +24,30 @@ enum LocalCodexStatusError: LocalizedError {
 }
 
 actor LocalCodexStatusReader {
-    func read() async throws -> CodexStatusSnapshot {
+    private let executableURL: URL?
+    private let requestTimeout: Duration
+    private let allowsCachedFallback: Bool
+    private let now: @Sendable () -> ContinuousClock.Instant
+    private var session: CodexAppServerSession?
+    private var readTask: Task<CodexStatusSnapshot, Error>?
+    private var generation = 0
+    private var consecutiveFailures = 0
+    private var retryNotBefore: ContinuousClock.Instant?
+    private var lastLiveError: Error?
+
+    init(
+        executableURL: URL? = nil,
+        requestTimeout: Duration = .seconds(15),
+        allowsCachedFallback: Bool = true,
+        now: @escaping @Sendable () -> ContinuousClock.Instant = { .now }
+    ) {
+        self.executableURL = executableURL
+        self.requestTimeout = requestTimeout
+        self.allowsCachedFallback = allowsCachedFallback
+        self.now = now
+    }
+
+    func read(keepingSessionAlive: Bool = true) async throws -> CodexStatusSnapshot {
         if CodexFolderAccess.isSandboxed {
             guard let folderURL = CodexFolderAccess.authorizedFolderURL else {
                 throw LocalCodexStatusError.codexFolderAuthorizationRequired
@@ -37,10 +62,69 @@ actor LocalCodexStatusReader {
             return snapshot
         }
 
+        if let readTask { return try await readTask.value }
+        let readGeneration = generation
+        let task = Task { try await performLiveRead(keepingSessionAlive: keepingSessionAlive) }
+        readTask = task
+        defer {
+            if generation == readGeneration { readTask = nil }
+        }
+        return try await task.value
+    }
+
+    /// Low-frequency checks must not leave the CLI's own background workers online.
+    func suspend() {
+        generation += 1
+        readTask?.cancel()
+        readTask = nil
+        session?.stop()
+        session = nil
+    }
+
+    private func performLiveRead(keepingSessionAlive: Bool) async throws -> CodexStatusSnapshot {
+        try Task.checkCancellation()
+        if let retryNotBefore, now() < retryNotBefore {
+            if allowsCachedFallback, let cached = LocalCodexSessionLog.latestSnapshot() {
+                return cached
+            }
+            throw lastLiveError ?? LocalCodexStatusError.serviceEnded
+        }
+        var usedSession: CodexAppServerSession?
         do {
-            return try await CodexAppServerSession().readSnapshot()
+            let current: CodexAppServerSession
+            if let session {
+                current = session
+            } else {
+                current = try CodexAppServerSession(
+                    executableURL: executableURL,
+                    requestTimeout: requestTimeout
+                )
+                session = current
+            }
+            usedSession = current
+            let snapshot = try await current.readSnapshot()
+            try Task.checkCancellation()
+            consecutiveFailures = 0
+            retryNotBefore = nil
+            lastLiveError = nil
+            if !keepingSessionAlive {
+                current.stop()
+                if session === current { session = nil }
+            }
+            return snapshot
         } catch {
-            if let cached = LocalCodexSessionLog.latestSnapshot() {
+            usedSession?.stop()
+            if session === usedSession { session = nil }
+            if Task.isCancelled { throw CancellationError() }
+            // Authentication/network failures must not turn the normal refresh
+            // timer back into a loop of expensive app-server initializations.
+            consecutiveFailures = min(consecutiveFailures + 1, 6)
+            lastLiveError = error
+            if consecutiveFailures >= 2 {
+                let seconds = min(300, 30 * (1 << (consecutiveFailures - 2)))
+                retryNotBefore = now().advanced(by: .seconds(seconds))
+            }
+            if allowsCachedFallback, let cached = LocalCodexSessionLog.latestSnapshot() {
                 return cached
             }
             throw error
@@ -107,18 +191,22 @@ enum CodexFolderAccess {
 }
 
 nonisolated final class CodexAppServerSession: @unchecked Sendable {
+    private static let logger = Logger(subsystem: "com.danieldev.CodexBuddyNew", category: "quotaSession")
     private let process = Process()
     private let standardInput = Pipe()
     private let standardOutput = Pipe()
-    private let messages: AsyncStream<Data>
-    private let continuation: AsyncStream<Data>.Continuation
+    private let stateLock = NSLock()
+    private let writeLock = NSLock()
+    private let requestTimeout: TimeInterval
+    private let messageBuffer = NewlineMessageBuffer()
+    private var initializationTask: Task<Void, Error>?
+    private var pending: [Int: PendingRequest] = [:]
+    private var terminalError: LocalCodexStatusError?
     private var requestID = 0
 
-    init(executableURL: URL? = nil) throws {
-        var streamContinuation: AsyncStream<Data>.Continuation!
-        let stream = AsyncStream<Data> { streamContinuation = $0 }
-        continuation = streamContinuation
-        messages = stream
+    init(executableURL: URL? = nil, requestTimeout: Duration = .seconds(15)) throws {
+        let timeout = requestTimeout.components
+        self.requestTimeout = max(0.001, Double(timeout.seconds) + Double(timeout.attoseconds) / 1e18)
 
         process.executableURL = try executableURL ?? URL(fileURLWithPath: Self.codexExecutable())
         process.arguments = ["-s", "read-only", "-a", "never", "app-server"]
@@ -126,78 +214,154 @@ nonisolated final class CodexAppServerSession: @unchecked Sendable {
         process.standardOutput = standardOutput
         // An unread pipe fills with app-server diagnostics and blocks the RPC response.
         process.standardError = FileHandle.nullDevice
+        // A CLI exiting between the liveness check and a write must fail the RPC,
+        // rather than delivering SIGPIPE to the menu-bar application.
+        _ = fcntl(standardInput.fileHandleForWriting.fileDescriptor, F_SETNOSIGPIPE, 1)
 
-        let buffer = NewlineMessageBuffer()
-        let continuation = continuation
-        standardOutput.fileHandleForReading.readabilityHandler = { handle in
+        standardOutput.fileHandleForReading.readabilityHandler = { [weak self] handle in
             let data = handle.availableData
+            guard let self else { return }
             guard !data.isEmpty else {
                 handle.readabilityHandler = nil
-                continuation.finish()
+                self.fail(.serviceEnded)
                 return
             }
-            for line in buffer.append(data) {
-                continuation.yield(line)
+            for line in self.messageBuffer.append(data) {
+                self.receive(line)
             }
         }
         try process.run()
+        Self.logger.info("Started quota app-server pid=\(self.process.processIdentifier, privacy: .public)")
     }
 
     deinit {
-        standardOutput.fileHandleForReading.readabilityHandler = nil
-        if process.isRunning { process.terminate() }
+        stop()
     }
 
     func readSnapshot() async throws -> CodexStatusSnapshot {
-        defer { stop() }
-        _ = try await request(
-            method: "initialize",
-            params: ["clientInfo": ["name": "codex-buddy-new", "version": "1.0"]]
-        )
-        try send(["method": "initialized"])
-        let response = try await request(method: "account/rateLimits/read", params: nil)
-        guard let result = response["result"] as? [String: Any] else {
-            throw LocalCodexStatusError.invalidResponse
+        do {
+            try await initializeIfNeeded()
+            let response = try await request(method: "account/rateLimits/read", params: nil)
+            guard let result = response.value["result"] as? [String: Any] else {
+                throw LocalCodexStatusError.invalidResponse
+            }
+            return try Self.snapshot(from: result)
+        } catch {
+            stop()
+            throw error
         }
-        return try Self.snapshot(from: result)
     }
 
-    private func request(method: String, params: [String: Any]?) async throws -> [String: Any] {
-        requestID += 1
-        let currentID = requestID
-        var payload: [String: Any] = ["id": currentID, "method": method]
-        if let params { payload["params"] = params }
-        try send(payload)
+    func stop() {
+        fail(.serviceEnded)
+    }
 
-        return try await withThrowingTaskGroup(of: ResponseBox.self) { group in
-            group.addTask { [self] in
-                for await data in messages {
-                    guard let message = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                          (message["id"] as? NSNumber)?.intValue == currentID else { continue }
-                    if message["error"] != nil { throw LocalCodexStatusError.invalidResponse }
-                    return ResponseBox(value: message)
+    private func initializeIfNeeded() async throws {
+        let task: Task<Void, Error> = try stateLock.withLock {
+            if let terminalError { throw terminalError }
+            if let initializationTask { return initializationTask }
+            let task = Task { [weak self] in
+                guard let self else { throw LocalCodexStatusError.serviceEnded }
+                _ = try await self.request(
+                    method: "initialize",
+                    params: ["clientInfo": ["name": "codex-buddy-new", "version": "1.0"]]
+                )
+                try self.send(["method": "initialized"])
+            }
+            initializationTask = task
+            return task
+        }
+        try await task.value
+    }
+
+    private func request(method: String, params: [String: Any]?) async throws -> ResponseBox {
+        try await withTaskCancellationHandler {
+            try Task.checkCancellation()
+            return try await withCheckedThrowingContinuation { continuation in
+                let id: Int
+                do {
+                    id = try stateLock.withLock {
+                        if let terminalError { throw terminalError }
+                        guard process.isRunning else { throw LocalCodexStatusError.serviceEnded }
+                        requestID += 1
+                        return requestID
+                    }
+                } catch {
+                    continuation.resume(throwing: error)
+                    return
                 }
-                throw LocalCodexStatusError.serviceEnded
+                let timeout = DispatchWorkItem { [weak self] in
+                    self?.fail(.timeout, ifPendingRequest: id)
+                }
+                let registered = stateLock.withLock {
+                    guard terminalError == nil else { return false }
+                    pending[id] = PendingRequest(continuation: continuation, timeout: timeout)
+                    return true
+                }
+                guard registered else {
+                    continuation.resume(throwing: LocalCodexStatusError.serviceEnded)
+                    return
+                }
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + requestTimeout, execute: timeout)
+                var payload: [String: Any] = ["id": id, "method": method]
+                if let params { payload["params"] = params }
+                do {
+                    try send(payload)
+                } catch {
+                    fail(.serviceEnded)
+                }
             }
-            group.addTask {
-                try await Task.sleep(for: .seconds(15))
-                throw LocalCodexStatusError.timeout
-            }
-            guard let first = try await group.next() else { throw LocalCodexStatusError.serviceEnded }
-            group.cancelAll()
-            return first.value
+        } onCancel: { [weak self] in
+            self?.stop()
+        }
+    }
+
+    private func receive(_ data: Data) {
+        guard let message = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let id = (message["id"] as? NSNumber)?.intValue,
+              let request = stateLock.withLock({ pending.removeValue(forKey: id) }) else {
+            // This client only reads account status. Notifications are deliberately
+            // discarded instead of accumulating in an unconsumed AsyncStream.
+            return
+        }
+        request.timeout.cancel()
+        if message["error"] != nil {
+            request.continuation.resume(throwing: LocalCodexStatusError.invalidResponse)
+        } else {
+            request.continuation.resume(returning: ResponseBox(value: message))
         }
     }
 
     private func send(_ object: [String: Any]) throws {
         var data = try JSONSerialization.data(withJSONObject: object)
         data.append(0x0A)
-        try standardInput.fileHandleForWriting.write(contentsOf: data)
+        try writeLock.withLock {
+            if let error = stateLock.withLock({ terminalError }) { throw error }
+            try standardInput.fileHandleForWriting.write(contentsOf: data)
+        }
     }
 
-    private func stop() {
+    private func fail(_ error: LocalCodexStatusError, ifPendingRequest id: Int? = nil) {
+        let stopped: ([PendingRequest], Task<Void, Error>?)? = stateLock.withLock {
+            guard terminalError == nil else { return nil }
+            if let id, pending[id] == nil { return nil }
+            terminalError = error
+            let requests = Array(pending.values)
+            pending.removeAll()
+            let initialization = initializationTask
+            initializationTask = nil
+            return (requests, initialization)
+        }
+        guard let (requests, initialization) = stopped else { return }
         standardOutput.fileHandleForReading.readabilityHandler = nil
+        Self.logger.info("Stopping quota app-server pid=\(self.process.processIdentifier, privacy: .public)")
         if process.isRunning { process.terminate() }
+        writeLock.withLock { try? standardInput.fileHandleForWriting.close() }
+        initialization?.cancel()
+        for request in requests {
+            request.timeout.cancel()
+            request.continuation.resume(throwing: error)
+        }
     }
 
     private static func codexExecutable() throws -> String {
@@ -267,6 +431,11 @@ nonisolated final class CodexAppServerSession: @unchecked Sendable {
     private struct ResponseBox: @unchecked Sendable {
         let value: [String: Any]
     }
+
+    private struct PendingRequest: @unchecked Sendable {
+        let continuation: CheckedContinuation<ResponseBox, Error>
+        let timeout: DispatchWorkItem
+    }
 }
 
 private nonisolated final class NewlineMessageBuffer: @unchecked Sendable {
@@ -304,9 +473,11 @@ nonisolated enum CodexExecutableLocator {
 
 nonisolated enum LocalCodexSessionLog {
     static func latestSnapshot() -> CodexStatusSnapshot? {
-        latestSnapshot(
-            in: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".codex")
-        )
+        let configuredRoot = ProcessInfo.processInfo.environment["CODEX_HOME"]
+            .flatMap { $0.isEmpty ? nil : URL(fileURLWithPath: $0) }
+        let codexRoot = configuredRoot
+            ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: ".codex")
+        return latestSnapshot(in: codexRoot.appending(path: "sessions"))
     }
 
     static func latestSnapshot(in authorizedFolder: URL) -> CodexStatusSnapshot? {

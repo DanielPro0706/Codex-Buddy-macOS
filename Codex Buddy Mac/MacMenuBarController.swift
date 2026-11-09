@@ -18,9 +18,9 @@ final class MacLifecycleDelegate: NSObject, NSApplicationDelegate {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in await self?.store.refresh() }
+            Task { @MainActor in await self?.store.refreshForWake() }
         }
-        updateChecker.startAutomaticCheck()
+        if !CodexFolderAccess.isSandboxed { updateChecker.startAutomaticCheck() }
         menuBarController = MacMenuBarController(
             store: store,
             navigation: navigation,
@@ -34,10 +34,11 @@ final class MacLifecycleDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ notification: Notification) {
-        Task { await store.refresh() }
+        Task { await store.refreshForWake() }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        store.stop()
         if let wakeObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver)
         }
