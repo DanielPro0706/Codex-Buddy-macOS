@@ -34,6 +34,24 @@ struct BuddyPageBackground: View {
 
 extension View {
     @ViewBuilder
+    func buddyPrimaryButtonStyle() -> some View {
+        if #available(iOS 26, macOS 26, *) {
+            buttonStyle(.glassProminent)
+        } else {
+            buttonStyle(.borderedProminent)
+        }
+    }
+
+    @ViewBuilder
+    func buddySecondaryButtonStyle() -> some View {
+        if #available(iOS 26, macOS 26, *) {
+            buttonStyle(.glass)
+        } else {
+            buttonStyle(.bordered)
+        }
+    }
+
+    @ViewBuilder
     func buddyCardSurface() -> some View {
         if #available(iOS 26, macOS 26, *) {
             glassEffect(.regular, in: RoundedRectangle(cornerRadius: BuddyStyle.cornerRadius,

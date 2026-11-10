@@ -30,7 +30,7 @@ struct BuddyPrivacyView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 4)
                 }
-                .buttonStyle(.borderedProminent)
+                .buddyPrimaryButtonStyle()
                 .controlSize(.large)
 
                 Link(destination: BuddyLinks.supportURL) {
@@ -38,7 +38,7 @@ struct BuddyPrivacyView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 4)
                 }
-                .buttonStyle(.bordered)
+                .buddySecondaryButtonStyle()
                 .controlSize(.large)
             }
             .padding(BuddyStyle.pagePadding)

@@ -98,7 +98,7 @@ struct SnapInsertMacTab: View {
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 12) {
                 Button("配对 iPhone", systemImage: "qrcode.viewfinder", action: openPairing)
-                    .buttonStyle(.borderedProminent)
+                    .buddyPrimaryButtonStyle()
             }
         }
         .padding(BuddyStyle.cardPadding)
