@@ -265,6 +265,11 @@ struct PairingDetailsView: View {
             }
         }
         .formStyle(.grouped)
+        .scrollContentBackground(.hidden)
+        .padding(BuddyStyle.pagePadding)
+        .frame(maxWidth: BuddyStyle.contentWidth)
+        .frame(maxWidth: .infinity)
+        .background { BuddyPageBackground() }
         .navigationTitle("连接 iPhone")
     }
 
@@ -376,6 +381,7 @@ private struct MenuBarSettingsView: View {
             }
         }
         .formStyle(.grouped)
+        .scrollContentBackground(.hidden)
         .padding(BuddyStyle.pagePadding)
         .frame(maxWidth: BuddyStyle.contentWidth)
         .frame(maxWidth: .infinity)
