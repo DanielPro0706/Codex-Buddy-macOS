@@ -1,12 +1,12 @@
 # Codex Buddy 支持
 
-Codex Buddy 的 Limits 在 Apple 设备上查看 Codex 额度，SnapInsert 把 iPhone 拍摄的加密照片接到 Mac，CloudSpace 则仅在 iOS 原生访问用户自己的工作区。Mac 侧栏包含 Limits、SnapInsert、连接和设置四项。它是独立开发的工具，不提供 Codex 账号、模型访问或额外额度，也不能改变 OpenAI 的额度规则。
+Codex Buddy 的 Limits 在 Apple 设备上查看 Codex 额度，SnapInsert 把 iPhone 拍摄的加密照片接到 Mac，CloudSpace 则仅在 iOS 原生访问用户自己的工作区。iOS 设有 Limits、SnapInsert、CloudSpace 和设置四个 Tab，各功能配置统一在设置页；Mac 侧栏包含 Limits、SnapInsert、连接和设置四项。它是独立开发的工具，不提供 Codex 账号、模型访问或额外额度，也不能改变 OpenAI 的额度规则。
 
 开发者：Weitao Feng。问题反馈入口：[GitHub Issues](https://github.com/DanielPro0706/Codex-Buddy-macOS/issues)。[隐私政策](PRIVACY.md)说明本机、iCloud 及开发者推送服务处理的数据。
 
 ## 开始使用
 
-1. 在 Mac 上安装 Codex Buddy，并确保本机 Codex 已登录。
+1. 在 Mac 上安装 Codex Buddy；使用 Limits 前确认本机 Codex 已登录。
 2. Mac App Store 版需要在设置中选择 `.codex` 或其 `sessions` 文件夹，才可读取已经记录的额度事件。直接分发的完整版可使用本机 Codex CLI 查询状态，并在失败时回退到本地记录。
 3. 在 Mac 独立的“连接”页显示统一二维码；iPhone 从 Limits 或 SnapInsert 扫描一次即可同时保存两个功能的配对。二维码包含访问令牌和照片加密密钥，请勿分享。Limits 的局域网直连需要两端位于同一网络，同一 Apple Account 的设备也可通过 iCloud 私人数据库同步额度。
 4. SnapInsert 接收照片会覆盖 Mac 剪贴板；开启 Mac 辅助功能权限后可向目标应用发出粘贴指令。

@@ -1,6 +1,6 @@
 # Codex Buddy
 
-Codex Buddy 的 iOS 版提供 Limits、SnapInsert 和 CloudSpace，三页采用统一布局与设置入口；macOS 主窗口侧栏包含 Limits、SnapInsert、连接和设置四项，Limits 直接展示额度状态。
+Codex Buddy 的 iOS 版设有 Limits、SnapInsert、CloudSpace 和设置四个 Tab，功能设置集中在独立的设置页；macOS 主窗口侧栏包含 Limits、SnapInsert、连接和设置四项，Limits 直接展示额度状态。
 
 | 功能 | 平台 | 用途 |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ iOS 使用 Apple 签名的 AppTransaction 授权，服务端按运行环境与 `
 
 ## 设置与本机数据
 
-iOS 三项功能共用一个设置表单，隐私说明使用同一页面。“清除 Limits 本机数据”只处理 Limits 的配对、缓存和同步密钥；SnapInsert 的移除配对单独操作。CloudSpace 的“清除工作区连接”移除当前地址及该 origin 保存的独立 WebDAV 凭据，不等于删除 iCloud、gateway 或共享出去的文件，也不会取消订阅。
+iOS 第四个 Tab 为独立的设置页，Limits、SnapInsert 和 CloudSpace 的配置集中在同一表单，隐私说明使用同一页面。“清除 Limits 本机数据”只处理 Limits 的配对、缓存和同步密钥；SnapInsert 的移除配对单独操作。CloudSpace 的“清除工作区连接”移除当前地址及该 origin 保存的独立 WebDAV 凭据，不等于删除 iCloud、gateway 或共享出去的文件，也不会取消订阅。
 
 ## 源码与构建
 
