@@ -14,7 +14,7 @@ Codex Buddy 在 iOS 和 macOS 中提供三个 Tab：
 
 iOS 使用 Apple 签名的 AppTransaction 授权，服务端按运行环境与 `appTransactionID` 的摘要关联账户。免费额度为每个经 Apple 验证的 App Store 账户每个北京时间自然月 100 张。已验证邀请码或有效月订阅提供不限张数的权益，仍受共享中转容量和排队限制。App Store 购买账户可能与 iCloud 登录账户不同。
 
-订阅产品标识为 `com.danieldev.CodexBuddyNew.snapinsert.monthly`。实际价格以 Apple 购买界面为准；App Store Connect 产品、签名校验、生产订阅服务器通知及服务端部署需配套完成，单独编译源码不会创建或上架订阅产品。付款由 Apple 处理，应用提供恢复购买；取消自动续订须在 Apple 订阅管理中完成。
+月订阅名称为 **Buddy Pro**，中国大陆定价为 **¥1.50/月**；其他地区以 App Store 显示为准。订阅产品标识为 `com.danieldev.CodexBuddyNew.snapinsert.monthly`。实际价格以 Apple 购买界面为准；App Store Connect 产品、签名校验、生产订阅服务器通知及服务端部署需配套完成，单独编译源码不会创建或上架订阅产品。付款由 Apple 处理，应用提供恢复购买；取消自动续订须在 Apple 订阅管理中完成。
 
 照片不写入中转服务器磁盘。服务端仍持久保存账户关联摘要、月用量、传输去重标识和订阅状态及交易标识；这些记录不能表述为“不记录任何数据”。Mac 剪贴板和已插入的图片由系统及目标应用分别管理。详细范围见 [隐私政策](docs/PRIVACY.md)。
 
