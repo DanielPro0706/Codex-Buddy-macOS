@@ -74,7 +74,7 @@ final class MacNavigationModel {}
 final class MainWindowDockVisibilityController {}
 final class MacUpdateChecker { func startAutomaticCheck() {} }
 final class MacMenuBarController {
-    init(store: MacStatusStore, navigation: MacNavigationModel, dockVisibilityController: MainWindowDockVisibilityController, updateChecker: MacUpdateChecker) {}
+    init(store: MacStatusStore, navigation: MacNavigationModel, dockVisibilityController: MainWindowDockVisibilityController, updateChecker: MacUpdateChecker, snapReceiver: MacReceiver) {}
 }
 
 @MainActor final class MacReceiver {

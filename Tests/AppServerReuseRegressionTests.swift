@@ -41,6 +41,15 @@ private struct ServerFixture {
         events().filter { $0["event"] as? String == "request" && $0["method"] as? String == method }
     }
 
+    func waitForStartup() async throws {
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        repeat {
+            if events().contains(where: { $0["event"] as? String == "spawn" }) { return }
+            try await Task.sleep(for: .milliseconds(10))
+        } while ContinuousClock.now < deadline
+        throw RegressionFailure(description: "local fixture did not finish starting within its startup budget")
+    }
+
     func assertExited() async throws {
         let pids = Set(events().filter { $0["event"] as? String == "spawn" }.compactMap { $0["pid"] as? Int32 })
         guard !pids.isEmpty else {
@@ -223,8 +232,13 @@ struct AppServerReuseRegressionTests {
 
     private static func testFailure(root: URL, source: URL, mode: String, expected: LocalCodexStatusError) async throws {
         let fixture = try ServerFixture(parent: root, name: mode, mode: mode, source: source)
-        let session = try CodexAppServerSession(executableURL: fixture.executable, requestTimeout: .milliseconds(500))
+        // Process startup is not the RPC behavior under test. Wait for Python to
+        // enter its input loop before starting a short intentional hang deadline.
+        // EOF detection keeps its separate three-second promptness assertion.
+        let timeout: Duration = isSameCase(expected, .timeout) ? .milliseconds(500) : .seconds(5)
+        let session = try CodexAppServerSession(executableURL: fixture.executable, requestTimeout: timeout)
         defer { session.stop() }
+        try await fixture.waitForStartup()
         let start = ContinuousClock.now
         do {
             _ = try await session.readSnapshot()

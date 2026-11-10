@@ -22,7 +22,8 @@ final class MacReceiver {
         didSet { UserDefaults.standard.set(automaticallyPaste, forKey: "automaticallyPaste") }
     }
 
-    @ObservationIgnored private var identity: PairingInfo?
+    private var identity: PairingInfo?
+    var pairing: PairingInfo? { identity }
     @ObservationIgnored private var channels: [UUID: RelayChannel] = [:]
     @ObservationIgnored private var activity: [UUID: Date] = [:]
     @ObservationIgnored private var readyChannels: Set<UUID> = []

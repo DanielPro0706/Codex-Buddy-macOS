@@ -336,7 +336,7 @@ struct CodexSnapshotHeader: View {
         HStack(spacing: 12) {
             CodexSymbol(size: 42)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Codex Buddy")
+                Text("Codex")
                     .font(.title2.bold())
                 Text(planName?.uppercased() ?? "等待数据")
                     .font(.caption.weight(.semibold))

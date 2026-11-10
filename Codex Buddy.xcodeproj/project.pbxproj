@@ -18,7 +18,6 @@
 				<string>AA0000000000000000000001</string>
 				<string>655F5BA7300A8F3900BE9813</string>
 				<string>D070016A2264B0639EBF2561</string>
-				<string>EA55D0CAC4B47C7B3B059962</string>
 				<string>D76FE2CBF3360BBFF5698A61</string>
 			</array>
 			<key>isa</key>
@@ -363,7 +362,6 @@
 				<string>655F5BD8300A90E500BE9813</string>
 				<string>AA0000000000000000000001</string>
 				<string>D070016A2264B0639EBF2561</string>
-				<string>EA55D0CAC4B47C7B3B059962</string>
 				<string>D76FE2CBF3360BBFF5698A61</string>
 			</array>
 			<key>isa</key>
@@ -428,7 +426,7 @@
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
 				<key>CURRENT_PROJECT_VERSION</key>
-				<string>12</string>
+				<string>13</string>
 				<key>DEVELOPMENT_TEAM</key>
 				<string>A47AU67Z4Q</string>
 				<key>ENABLE_APP_SANDBOX</key>
@@ -453,7 +451,7 @@
 				<key>MACOSX_DEPLOYMENT_TARGET</key>
 				<string>26.0</string>
 				<key>MARKETING_VERSION</key>
-				<string>1.2</string>
+				<string>1.2.1</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
 				<string>com.danieldev.CodexBuddyNew</string>
 				<key>PRODUCT_NAME</key>
@@ -497,7 +495,7 @@
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
 				<key>CURRENT_PROJECT_VERSION</key>
-				<string>12</string>
+				<string>13</string>
 				<key>DEVELOPMENT_TEAM</key>
 				<string>A47AU67Z4Q</string>
 				<key>ENABLE_APP_SANDBOX</key>
@@ -524,7 +522,7 @@
 				<key>MACOSX_DEPLOYMENT_TARGET</key>
 				<string>26.0</string>
 				<key>MARKETING_VERSION</key>
-				<string>1.2</string>
+				<string>1.2.1</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
 				<string>com.danieldev.CodexBuddyNew</string>
 				<key>PRODUCT_NAME</key>
@@ -575,15 +573,6 @@
 			<string>PBXFileSystemSynchronizedRootGroup</string>
 			<key>path</key>
 			<string>BuddySnapShared</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>EA55D0CAC4B47C7B3B059962</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileSystemSynchronizedRootGroup</string>
-			<key>path</key>
-			<string>BuddyCloudSpace</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>

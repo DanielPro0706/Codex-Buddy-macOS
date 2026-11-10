@@ -10,7 +10,7 @@ enum MacMainTab: Hashable {
 @Observable
 final class MacNavigationModel {
     var selectedTab: MacMainTab = .status
-    var selectedFeature: BuddyTab = .limitis
+    var selectedFeature: BuddyTab = .limits
 }
 
 enum MenuBarDisplayStyle: String, CaseIterable, Identifiable {
@@ -200,8 +200,15 @@ struct OpenMainWindowCommands: Commands {
     }
 
     private func openMainWindow(tab: MacMainTab) {
-        navigation.selectedFeature = .limitis
-        navigation.selectedTab = tab
+        if tab == .pairing {
+            navigation.selectedFeature = .connection
+        } else if tab == .settings {
+            navigation.selectedFeature = .settings
+            navigation.selectedTab = .settings
+        } else {
+            navigation.selectedFeature = .limits
+            navigation.selectedTab = .status
+        }
         dockVisibilityController.prepareToShowMainWindow()
         NSApplication.shared.activate(ignoringOtherApps: true)
         openWindow(id: "main")

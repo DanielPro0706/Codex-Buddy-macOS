@@ -26,7 +26,8 @@ final class MacLifecycleDelegate: NSObject, NSApplicationDelegate {
             store: store,
             navigation: navigation,
             dockVisibilityController: dockVisibilityController,
-            updateChecker: updateChecker
+            updateChecker: updateChecker,
+            snapReceiver: snapReceiver
         )
     }
 
@@ -114,6 +115,7 @@ final class MainWindowDockLifecycleNSView: NSView {
 private final class MacMenuBarController: NSObject {
     private let store: MacStatusStore
     private let updateChecker: MacUpdateChecker
+    private let snapReceiver: MacReceiver
     private let item: NSStatusItem
     private let menu = NSMenu()
     private var labelWidthConstraint: NSLayoutConstraint?
@@ -124,10 +126,12 @@ private final class MacMenuBarController: NSObject {
         store: MacStatusStore,
         navigation: MacNavigationModel,
         dockVisibilityController: MainWindowDockVisibilityController,
-        updateChecker: MacUpdateChecker
+        updateChecker: MacUpdateChecker,
+        snapReceiver: MacReceiver
     ) {
         self.store = store
         self.updateChecker = updateChecker
+        self.snapReceiver = snapReceiver
         item = NSStatusBar.system.statusItem(
             withLength: Self.measuredLabelWidth(for: store)
         )
@@ -171,7 +175,7 @@ private final class MacMenuBarController: NSObject {
         hostedLabel.translatesAutoresizingMaskIntoConstraints = false
         button.title = ""
         button.image = nil
-        button.toolTip = "Codex Buddy"
+        button.toolTip = "Codex"
         button.addSubview(hostedLabel)
 
         let widthConstraint = hostedLabel.widthAnchor.constraint(
@@ -198,7 +202,8 @@ private final class MacMenuBarController: NSObject {
                 store: store,
                 navigation: navigation,
                 dockVisibilityController: dockVisibilityController,
-                updateChecker: updateChecker
+                updateChecker: updateChecker,
+                snapReceiver: snapReceiver
             )
         )
         let fittingSize = hostedContent.fittingSize
@@ -233,6 +238,11 @@ private final class MacMenuBarController: NSObject {
             _ = store.snapshot?.windows.count
             _ = store.snapshot?.resetCredits?.availableCount
             _ = store.snapshot?.resetCredits?.availableCredits.count
+            _ = store.cloudStatus
+            _ = snapReceiver.isListening
+            _ = snapReceiver.isReceivingEnabled
+            _ = snapReceiver.requiresInvitation
+            _ = snapReceiver.status
         } onChange: { [weak self] in
             Task { @MainActor [weak self] in
                 guard let self else { return }

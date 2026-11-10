@@ -9,81 +9,86 @@ struct ContentView: View {
     let snapReceiver: MacReceiver
 
     var body: some View {
-        @Bindable var navigation = navigation
-        TabView(selection: $navigation.selectedFeature) {
-            Tab("limitis", systemImage: "gauge.with.dots.needle.67percent", value: .limitis) {
-                LimitisMacView(store: store, navigation: navigation,
-                               dockVisibilityController: dockVisibilityController,
-                               updateChecker: updateChecker)
-            }
-            Tab("snapinsert", systemImage: "camera.on.rectangle", value: .snapinsert) {
-                SnapInsertMacTab(receiver: snapReceiver)
-            }
-            Tab("CloudSpace", systemImage: "icloud", value: .cloudSpace) {
-                CloudSpaceTab()
+        NavigationSplitView {
+            MacSidebar(selection: sidebarSelection)
+        } detail: {
+            switch navigation.selectedFeature {
+            case .limits, .cloudSpace:
+                LimitsMacView(store: store, navigation: navigation, updateChecker: updateChecker)
+            case .snapinsert:
+                SnapInsertMacTab(receiver: snapReceiver) {
+                    navigation.selectedFeature = .connection
+                }
+            case .connection:
+                PairingDetailsView(connection: store.pairingConnection, snapReceiver: snapReceiver)
+            case .settings:
+                MacSettingsView(store: store, updateChecker: updateChecker, snapReceiver: snapReceiver) {
+                    navigation.selectedFeature = .connection
+                }
             }
         }
+        .navigationSplitViewStyle(.balanced)
         .frame(minWidth: 760, minHeight: 560)
         .background {
             MainWindowDockLifecycleView(controller: dockVisibilityController)
                 .frame(width: 0, height: 0)
         }
-    }
-}
-
-struct LimitisMacView: View {
-    let store: MacStatusStore
-    let navigation: MacNavigationModel
-    let dockVisibilityController: MainWindowDockVisibilityController
-    let updateChecker: MacUpdateChecker
-
-    var body: some View {
-        NavigationSplitView {
-            MacSidebar(selection: sidebarSelection)
-        } detail: {
-            MacDetailView(
-                selection: navigation.selectedTab,
-                store: store,
-                updateChecker: updateChecker
-            )
+        .onChange(of: navigation.selectedFeature, initial: true) { _, selectedFeature in
+            if selectedFeature == .cloudSpace {
+                navigation.selectedFeature = .limits
+            } else if selectedFeature == .limits {
+                navigation.selectedTab = .status
+            }
         }
-        .navigationSplitViewStyle(.balanced)
-        .frame(minWidth: 760, minHeight: 520)
-        .background {
-            MainWindowDockLifecycleView(controller: dockVisibilityController)
-                .frame(width: 0, height: 0)
+        .onChange(of: navigation.selectedTab, initial: true) { _, tab in
+            if tab == .settings { navigation.selectedFeature = .settings }
+            else if tab == .pairing { navigation.selectedFeature = .connection }
         }
-        .task { store.start() }
     }
 
-    private var sidebarSelection: Binding<MacMainTab?> {
+    private var sidebarSelection: Binding<BuddyTab?> {
         Binding(
-            get: { navigation.selectedTab },
-            set: { selectedTab in
-                if let selectedTab {
-                    navigation.selectedTab = selectedTab
+            get: { navigation.selectedFeature == .cloudSpace ? .limits : navigation.selectedFeature },
+            set: { selectedFeature in
+                if let selectedFeature {
+                    navigation.selectedFeature = selectedFeature
                 }
             }
         )
     }
 }
 
+struct LimitsMacView: View {
+    let store: MacStatusStore
+    let navigation: MacNavigationModel
+    let updateChecker: MacUpdateChecker
+
+    var body: some View {
+        MacOverviewView(store: store)
+    }
+}
+
 private struct MacSidebar: View {
-    @Binding var selection: MacMainTab?
+    @Binding var selection: BuddyTab?
 
     var body: some View {
         List(selection: $selection) {
-            NavigationLink(value: MacMainTab.status) {
-                Label("状态", systemImage: "gauge.with.dots.needle.67percent")
+            NavigationLink(value: BuddyTab.limits) {
+                Label("Limits", systemImage: "gauge.with.dots.needle.67percent")
             }
 
-            NavigationLink(value: MacMainTab.pairing) {
+            NavigationLink(value: BuddyTab.snapinsert) {
+                Label("SnapInsert", systemImage: "camera.on.rectangle")
+            }
+
+            NavigationLink(value: BuddyTab.connection) {
                 Label("连接", systemImage: "iphone.and.arrow.forward")
             }
 
-            NavigationLink(value: MacMainTab.settings) {
+            NavigationLink(value: BuddyTab.settings) {
                 Label("设置", systemImage: "gearshape")
             }
+
         }
         .listStyle(.sidebar)
         .navigationTitle("Codex Buddy")
@@ -91,26 +96,8 @@ private struct MacSidebar: View {
     }
 }
 
-private struct MacDetailView: View {
-    let selection: MacMainTab
-    let store: MacStatusStore
-    let updateChecker: MacUpdateChecker
-
-    var body: some View {
-        switch selection {
-        case .status:
-            MacOverviewView(store: store)
-        case .pairing:
-            PairingDetailsView(connection: store.pairingConnection)
-        case .settings:
-            MacSettingsView(store: store, updateChecker: updateChecker)
-        }
-    }
-}
-
 struct MacOverviewView: View {
     let store: MacStatusStore
-    @State private var showingExample = false
 
     var body: some View {
         ScrollView {
@@ -130,9 +117,6 @@ struct MacOverviewView: View {
                     Label(store.statusText, systemImage: store.isRefreshing ? "arrow.trianglehead.2.clockwise.rotate.90" : "circle.fill")
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Button("查看示例", systemImage: "eye") {
-                        showingExample = true
-                    }
                     Button("立即读取", systemImage: "arrow.clockwise") {
                         Task { await store.refresh() }
                     }
@@ -143,36 +127,8 @@ struct MacOverviewView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
-        .navigationTitle("limitis")
-        .sheet(isPresented: $showingExample) { MacExampleStatusView() }
-    }
-}
-
-private struct MacExampleStatusView: View {
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                HStack {
-                    Label("演示数据", systemImage: "eye")
-                        .font(.title2.weight(.semibold))
-                    Spacer()
-                    Button("关闭") { dismiss() }
-                        .keyboardShortcut(.cancelAction)
-                }
-                Text("以下为虚构的额度示例，不代表你的账户。打开此示例不会查询额度或替换真实状态。")
-                    .foregroundStyle(.secondary)
-                CodexSnapshotHeader(
-                    planName: CodexStatusSnapshot.preview.planName,
-                    capturedAt: CodexStatusSnapshot.preview.capturedAt,
-                    isStale: false
-                )
-                MacStatusGlassContent(snapshot: .preview, cloudStatus: .notChecked, showsCloudStatus: false)
-            }
-            .padding(28)
-        }
-        .frame(width: 600, height: 650)
+        .background { BuddyPageBackground() }
+        .navigationTitle("Limits")
     }
 }
 
@@ -252,27 +208,33 @@ private struct MacStatusGlassContent: View {
 
 struct PairingDetailsView: View {
     let connection: MacConnection
+    let snapReceiver: MacReceiver
     @State private var copiedField: String?
 
     var body: some View {
         Form {
             Section("在 iPhone 上连接") {
-                Text("让 Mac 与 iPhone 连接同一局域网，然后在 iPhone 的“连接”页面填写以下信息。")
+                Text("在 iPhone 上扫描一次，即可保存 Limits 和 SnapInsert 的连接。Limits 直连时，两端需要在同一网络。")
                     .foregroundStyle(.secondary)
 
-                if let pairingURL = connection.pairingURL {
+                if let snapPairing = snapReceiver.pairing,
+                   let pairingURL = try? BuddyPairingPayload.unifiedURL(limits: connection, snapInsert: snapPairing) {
                     HStack {
                         Spacer()
                         PairingQRCodeView(payload: pairingURL.absoluteString)
-                            .frame(width: 210, height: 210)
+                            .frame(width: 260, height: 260)
                         Spacer()
                     }
-                    Text("在 iPhone 上选择“扫描配对二维码”，即可自动填写地址和令牌。")
+                    Text("从 Limits 或 SnapInsert 扫描，均使用这一个二维码。请勿分享。")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    Label("统一配对信息尚未就绪，请在 SnapInsert 页面检查接收状态。", systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(.secondary)
                 }
 
+                DisclosureGroup("手动连接 Limits") {
                 LabeledContent("Mac 地址") {
                     Text(connection.baseURL.absoluteString)
                         .textSelection(.enabled)
@@ -295,10 +257,11 @@ struct PairingDetailsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                }
             }
 
             Section("安全说明") {
-                Text("服务仅在当前 Mac 的局域网端口监听；所有状态请求都必须携带此随机令牌。")
+                Text("二维码包含连接凭据，仅用于你自己的设备。额度直连使用局域网访问令牌；照片使用独立密钥端到端加密。")
             }
         }
         .formStyle(.grouped)
@@ -315,18 +278,25 @@ struct PairingDetailsView: View {
 struct MacSettingsView: View {
     let store: MacStatusStore
     let updateChecker: MacUpdateChecker
+    let snapReceiver: MacReceiver
+    let openPairing: () -> Void
 
     var body: some View {
-        MenuBarSettingsView(store: store, updateChecker: updateChecker)
-            .navigationTitle("设置")
+        NavigationStack {
+            MenuBarSettingsView(store: store, updateChecker: updateChecker,
+                                snapReceiver: snapReceiver, openPairing: openPairing)
+                .navigationTitle("设置")
+        }
     }
 }
 
 private struct MenuBarSettingsView: View {
     let store: MacStatusStore
     let updateChecker: MacUpdateChecker
+    @Bindable var snapReceiver: MacReceiver
+    let openPairing: () -> Void
     @AppStorage(MenuBarDisplayStyle.storageKey) private var displayStyle = MenuBarDisplayStyle.progressBar
-    @State private var showingExample = false
+    @State private var confirmingResetPhotos = false
 
     var body: some View {
         Form {
@@ -337,10 +307,22 @@ private struct MenuBarSettingsView: View {
                     }
                 }
                 .pickerStyle(.segmented)
+            }
 
-                Text("进度条显示精确百分比；圆环用更紧凑的方式同时展示 5h 与 7d 额度。")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            Section("SnapInsert") {
+                Toggle("接收照片", isOn: Binding(
+                    get: { snapReceiver.isReceivingEnabled },
+                    set: { enabled in
+                        if enabled != snapReceiver.isReceivingEnabled { snapReceiver.toggleReceiving() }
+                    }
+                ))
+                Toggle("自动粘贴", isOn: $snapReceiver.automaticallyPaste)
+                LabeledContent("辅助功能", value: snapReceiver.accessibilityGranted ? "已授权" : "未授权")
+                if !snapReceiver.accessibilityGranted {
+                    Button("打开辅助功能设置") { snapReceiver.requestAccessibility() }
+                }
+                Button("显示配对二维码", systemImage: "qrcode", action: openPairing)
+                Button("重置照片连接…", role: .destructive) { confirmingResetPhotos = true }
             }
 
             if store.usesSandboxedFolderAccess {
@@ -350,7 +332,6 @@ private struct MenuBarSettingsView: View {
                             .lineLimit(1)
                             .truncationMode(.middle)
                     }
-
                     HStack {
                         Button("选择 .codex 文件夹", systemImage: "folder.badge.plus") {
                             store.chooseCodexFolder()
@@ -364,48 +345,48 @@ private struct MenuBarSettingsView: View {
                 } header: {
                     Text("Codex 数据访问")
                 } footer: {
-                    Text("Mac App Store 版受系统沙盒保护，只读取你明确选择的文件夹中的额度事件。")
+                    Text("仅访问你选择的文件夹。")
                 }
             }
 
-            Section {
+            Section("iCloud 同步") {
                 CodexCloudStatusView(status: store.cloudStatus, compact: true)
                     .padding(.horizontal, -12)
-            } header: {
-                Text("iCloud 同步")
-            } footer: {
-                Text("额度变化时同步至 iCloud；未变化时至少间隔五分钟再次发布。iPhone 使用同一 Apple Account 可读取最新快照。开发者的推送服务还保存快照与推送路由信息，详见隐私政策。")
             }
 
-            Section {
+            Section("软件更新") {
                 LabeledContent("当前版本") {
-                    Text(updateChecker.installedVersionDescription)
-                        .foregroundStyle(.secondary)
+                    Text(updateChecker.installedVersionDescription).foregroundStyle(.secondary)
                 }
-
                 if updateChecker.usesMacAppStoreUpdates {
-                    Text("此版本通过 Mac App Store 更新。")
-                        .foregroundStyle(.secondary)
+                    Text("通过 Mac App Store 更新。").foregroundStyle(.secondary)
                 } else {
                     UpdateStatusView(updateChecker: updateChecker)
                 }
-            } header: {
-                Text("软件更新")
-            } footer: {
-                Text(updateChecker.usesMacAppStoreUpdates
-                    ? "请使用 Mac App Store 的更新功能更新此应用。"
-                    : "Codex Buddy 会在启动后检查 GitHub 上的最新 macOS 完整版。")
             }
 
-            Section("帮助") {
-                Button("查看示例", systemImage: "eye") { showingExample = true }
-                Link("隐私政策", destination: URL(string: "https://github.com/DanielPro0706/Codex-Buddy-macOS/blob/main/docs/PRIVACY.md")!)
-                Link("支持与反馈", destination: URL(string: "https://github.com/DanielPro0706/Codex-Buddy-macOS/blob/main/docs/SUPPORT.md")!)
+            Section("关于") {
+                NavigationLink {
+                    BuddyPrivacyView()
+                } label: {
+                    Label("隐私政策", systemImage: "hand.raised")
+                }
+                Link("使用条款", destination: BuddyLinks.termsURL)
+                Link("支持与反馈", destination: BuddyLinks.supportURL)
             }
         }
         .formStyle(.grouped)
-        .padding(20)
-        .sheet(isPresented: $showingExample) { MacExampleStatusView() }
+        .padding(BuddyStyle.pagePadding)
+        .frame(maxWidth: BuddyStyle.contentWidth)
+        .frame(maxWidth: .infinity)
+        .background { BuddyPageBackground() }
+        .onAppear { snapReceiver.refreshAccessibility() }
+        .confirmationDialog("重置 SnapInsert 连接？", isPresented: $confirmingResetPhotos, titleVisibility: .visible) {
+            Button("重置照片连接", role: .destructive) { snapReceiver.rotatePairing(); openPairing() }
+            Button("取消", role: .cancel) {}
+        } message: {
+            Text("当前照片连接将断开，需要重新扫描统一二维码。")
+        }
     }
 }
 
@@ -414,6 +395,7 @@ struct MacMenuContent: View {
     let navigation: MacNavigationModel
     let dockVisibilityController: MainWindowDockVisibilityController
     let updateChecker: MacUpdateChecker
+    let snapReceiver: MacReceiver
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -458,6 +440,8 @@ struct MacMenuContent: View {
                     .quaternary.opacity(0.45),
                     in: RoundedRectangle(cornerRadius: 14, style: .continuous)
                 )
+
+            MacSnapInsertMenuStatus(receiver: snapReceiver, open: openSnapInsert)
 
             Divider()
 
@@ -510,11 +494,87 @@ struct MacMenuContent: View {
     }
 
     private func openMainWindow(tab: MacMainTab) {
-        navigation.selectedFeature = .limitis
-        navigation.selectedTab = tab
+        if tab == .pairing {
+            navigation.selectedFeature = .connection
+        } else if tab == .settings {
+            navigation.selectedFeature = .settings
+            navigation.selectedTab = .settings
+        } else {
+            navigation.selectedFeature = .limits
+            navigation.selectedTab = .status
+        }
         dockVisibilityController.prepareToShowMainWindow()
         NSApplication.shared.activate(ignoringOtherApps: true)
         openWindow(id: "main")
+    }
+
+    private func openSnapInsert() {
+        navigation.selectedFeature = .snapinsert
+        dockVisibilityController.prepareToShowMainWindow()
+        NSApplication.shared.activate(ignoringOtherApps: true)
+        openWindow(id: "main")
+    }
+}
+
+private struct MacSnapInsertMenuStatus: View {
+    let receiver: MacReceiver
+    let open: () -> Void
+
+    var body: some View {
+        Button(action: open) {
+            HStack(alignment: .center, spacing: 10) {
+                Image(systemName: statusSymbol)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(statusColor)
+                    .frame(width: 20)
+                    .accessibilityHidden(true)
+                HStack {
+                        Text("SnapInsert")
+                            .font(.headline)
+                        Spacer(minLength: 8)
+                        Text(statusTitle)
+                            .font(.body)
+                            .foregroundStyle(statusColor)
+                }
+                Image(systemName: "chevron.right")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .background(
+                .quaternary.opacity(0.45),
+                in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+            )
+        }
+        .buttonStyle(.plain)
+        .help("\(receiver.status)\n打开 SnapInsert 接收与配对页面")
+        .accessibilityLabel("SnapInsert，\(statusTitle)")
+        .accessibilityValue(receiver.status)
+        .accessibilityHint("打开主窗口的 SnapInsert 页面")
+    }
+
+    private var statusTitle: String {
+        if receiver.requiresInvitation { return "需要授权" }
+        if receiver.isListening { return "已连接" }
+        if receiver.isReceivingEnabled { return "等待连接" }
+        return "已暂停"
+    }
+
+    private var statusSymbol: String {
+        if receiver.requiresInvitation { return "exclamationmark.shield.fill" }
+        if receiver.isListening { return "checkmark.circle.fill" }
+        if receiver.isReceivingEnabled { return "arrow.trianglehead.2.clockwise.rotate.90" }
+        return "pause.circle.fill"
+    }
+
+    private var statusColor: Color {
+        if receiver.requiresInvitation { return .orange }
+        if receiver.isListening { return .green }
+        if receiver.isReceivingEnabled { return .orange }
+        return .secondary
     }
 }
 
@@ -587,7 +647,7 @@ private struct MacMenuHeader: View {
         HStack(spacing: 12) {
             CodexSymbol(size: 40)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Codex Buddy")
+                Text("Codex")
                     .font(.title3.weight(.semibold))
                 if let planName, !planName.isEmpty {
                     Text(planName.uppercased())
@@ -677,13 +737,13 @@ private struct MacCreditsBalanceRow: View {
     var body: some View {
         HStack(spacing: 10) {
             Label("Credits", systemImage: "creditcard")
-                .font(.headline)
+                .font(menuStyle ? .headline : .title2.weight(.semibold))
 
             Spacer(minLength: 12)
 
             Text(balance)
-                .font(menuStyle ? .title2.monospacedDigit() : .title3.monospacedDigit())
-                .fontWeight(menuStyle ? .regular : .semibold)
+                .font(menuStyle ? .title2.monospacedDigit() : .largeTitle.monospacedDigit())
+                .fontWeight(menuStyle ? .regular : .bold)
                 .foregroundStyle(.primary)
         }
         .padding(.horizontal, menuStyle ? 13 : 18)
@@ -699,10 +759,5 @@ private struct MacCreditsBalanceRow: View {
 }
 
 #Preview {
-    LimitisMacView(
-        store: MacStatusStore(previewSnapshot: .preview),
-        navigation: MacNavigationModel(),
-        dockVisibilityController: MainWindowDockVisibilityController(),
-        updateChecker: MacUpdateChecker()
-    )
+    MacOverviewView(store: MacStatusStore(previewSnapshot: .preview))
 }

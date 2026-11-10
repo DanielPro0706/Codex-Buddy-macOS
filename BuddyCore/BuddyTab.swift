@@ -1,7 +1,9 @@
 import Foundation
 
 enum BuddyTab: String, Hashable {
-    case limitis
+    case limits
     case snapinsert
+    case connection
+    case settings
     case cloudSpace
 }

@@ -291,7 +291,7 @@ final class RelayChannel {
             } catch {
                 if !closed {
                     if socket.closeCode.rawValue == 4005 {
-                        close(reason: "本月免费 100 张已用完。请在 iPhone 的 SnapInsert 设置验证邀请码或订阅后继续。", authorizationRequired: true)
+                        close(reason: "本月额度已用完，可在设置中验证邀请码或开通 Buddy Pro。", authorizationRequired: true)
                     } else if socket.closeCode.rawValue == 4004 {
                         close(reason: "此邀请码的流量额度已用完，请联系维护者调整额度。", authorizationRequired: true)
                     } else if socket.closeCode.rawValue == 4003 || (socket.response as? HTTPURLResponse)?.statusCode == 403 {

@@ -2,7 +2,7 @@
 
 更新日期：2026 年 11 月 10 日
 
-本政策适用于 Codex Buddy 的 macOS、iOS、watchOS 应用，以及小组件和实时活动。开发者为 Weitao Feng；联系入口为 [GitHub Issues](https://github.com/DanielPro0706/Codex-Buddy-macOS/issues)。Codex Buddy 是独立开发的工具，提供 limitis 额度状态、SnapInsert 照片传输和 CloudSpace 自有 gateway 浏览；不是 OpenAI 官方产品。
+本政策适用于 Codex Buddy 的 macOS、iOS、watchOS 应用，以及小组件和实时活动。开发者为 Weitao Feng；联系入口为 [GitHub Issues](https://github.com/DanielPro0706/Codex-Buddy-macOS/issues)。Codex Buddy 是独立开发的工具，在 iOS 和 macOS 提供 Limits 额度状态与 SnapInsert 照片传输，CloudSpace 自有 gateway 的原生工作区访问仅在 iOS 提供；不是 OpenAI 官方产品。
 
 ## 本机处理
 
@@ -11,6 +11,8 @@ Mac 端读取 Codex 的额度状态，包括使用百分比、额度窗口、恢
 直接分发版为调整刷新频率，会在本机检查显示器休眠、电源、合盖、锁屏、屏保状态，以及正常保存的 Codex 会话是否存在正在执行的任务。任务检查解析本地日志的会话和任务生命周期元数据；这些检测结果、进程信息和日志正文不会上传到开发者的推送服务或 CloudKit。App Store 沙盒版不扫描其他进程，也不启动外部 CLI。
 
 应用在设备上保存最近的额度快照、界面偏好、配对地址和随机访问令牌；Mac 版另保存用户选择文件夹的系统授权书签。iPhone 与 Apple Watch 通过 Apple WatchConnectivity 交换额度快照和配对连接信息。小组件使用本机共享缓存；实时活动在系统界面显示选定的额度字段。
+
+新版统一二维码在一次扫描中同时保存 Limits 和 SnapInsert 的配对信息：它包含 Mac 地址、Limits 访问令牌，以及 SnapInsert 的配对信息和照片加密密钥。Mac 侧栏的“连接”页集中显示该二维码，SnapInsert 的配对入口会跳转到同一页。二维码、配对链接及其截图都应仅用于你自己的设备，不应公开分享。旧版单功能二维码只更新对应功能的配对，并提示补齐另一项连接。
 
 应用不会将 Codex 对话正文、提示词、项目文件或本地会话日志上传到 CloudKit、开发者推送服务或配对设备，也不会将 Codex 登录凭据交给这些接收方。
 
@@ -39,17 +41,23 @@ Mac 收到后在本机解密、生成预览并写入系统剪贴板；开启辅�
 
 为执行账户额度与购买权益，iOS 端向授权服务发送 Apple 签名的 AppTransaction，以及适用的订阅交易。服务校验签名后，用运行环境与 AppTransaction 的账户关联标识 `appTransactionID` 生成 SHA-256 账户摘要；这不是读取你的 Apple Account 邮箱、姓名或 iCloud 登录密码。App Store 的购买账户可能与设备用于 iCloud 的账户不同，额度依据 Apple 验证的 App Store 账户关联标识执行。
 
-账户账本持久保存账户摘要、运行环境、配对 room 摘要、已验证邀请码的授权组标识（如适用）、当前计数月份、已使用免费张数、当月传输 UUID（用于防重放），以及适用的订阅签名时间、到期时间、交易 ID、原始交易 ID和撤销状态。它不保存原始 AppTransaction、订阅交易或服务器通知的签名原文，也不保存照片、配对密钥、账户邮箱或密码。订阅交易 ID 仍是关联标识；账户摘要不代表记录已完全匿名。
+账户账本持久保存账户摘要、运行环境、配对 room 摘要、已验证邀请码的授权组标识（如适用）、当前计数月份、已使用免费张数、当月传输 UUID（用于防重放），以及适用的订阅签名时间、到期时间、交易 ID、原始交易 ID 和撤销状态。它不保存原始 AppTransaction、订阅交易或服务器通知的签名原文，也不保存照片、配对密钥、账户邮箱或密码。订阅交易 ID 仍是关联标识；账户摘要不代表记录已完全匿名。
 
 普通账户按北京时间自然月享有 100 张免费额度，于每月 1 日重置。服务在转发前写入计数；一次已消费的传输重试可能仍占用该次额度，计数不等同于目标应用已成功粘贴的图片数。已验证邀请码或有效订阅提供不限张数的授权，服务仍按共享中转容量排队。邀请码账本保存代码摘要、room 绑定、授权与并发配置及聚合密文流量，不保存邀请码原文。
 
 订阅通过 Apple StoreKit 提供，由 Apple 处理付款。购买前以 App Store 显示的价格、周期及条款为准；可在 Apple 的订阅管理中取消自动续订。服务可能接收 Apple 的签名服务器通知以更新续订、到期与撤销状态。恢复购买会重新读取 Apple 权益并请求服务端校验。清空队列、移除配对、清除本机数据或卸载应用不会取消订阅，也不会自动删除账户、计数、邀请码或交易关联记录；目前未承诺统一自动到期时间或自助远端删除入口。有关查询或删除请求，请通过本页联系入口发起，不要在公开 Issues 贴出交易签名、配对信息或邀请码。
 
-## CloudSpace 自有 gateway
+## CloudSpace 自有 gateway（仅 iOS）
 
-CloudSpace 未配置时展示公开的 [iCloud 工作区部署方法](https://github.com/DanielPro0706/codex-icloud-workspace)。配置后，内嵌 Apple WebKit 浏览器访问你填写的 gateway 网页；地址仅保存在当前设备的应用偏好中。应用不内置开发者个人 gateway 地址、认证凭据或私人文件，未配置也不会访问开发者的私人工作区。
+CloudSpace 未配置时展示公开的 [iCloud 工作区部署方法](https://github.com/DanielPro0706/codex-icloud-workspace)。配置后，原生界面通过 URLSession 直接访问你填写的 HTTPS gateway，使用其现有 JSON 接口读取身份方式、当前工作区和最近一次服务端检查记录，并使用 WebDAV 浏览目录与下载文件。服务端检查记录不等于当前 Apple 登录或云环境已重新验证。应用不内置开发者个人 gateway 地址、认证凭据或私人文件，也不把这些文件接入额度推送或照片中转链路。
 
-网页登录、文件列表、下载、编辑、上传、同步及运行日志由你选择的 gateway 和其后端处理，适用该部署的配置与数据政策。WebKit 使用持久网页数据存储，可在设备上保存登录 Cookie、网站数据和缓存。移除 gateway 地址不会自动清除全部 WebKit 网站数据，也不会删除 gateway 或 iCloud 中的文件。私有网络 gateway 还可能需要用户自行连接 Tailscale 等网络服务；Codex Buddy 不代替这些服务完成网络认证。
+服务器根地址仅保存在当前设备的应用偏好设置中。可选的独立 WebDAV 用户名和密码按 gateway origin（协议、主机和有效端口）保存到当前设备钥匙串，不主动同步到 iCloud 钥匙串。现有 gateway 的目录浏览需要该独立凭据；其他只读状态可按部署使用 Tailscale 身份。该功能无需也不应接收你的 Apple 账户密码，用户应只填写自己 gateway 的独立 WebDAV 凭据。
+
+网络请求使用临时 URLSession，不读取或保存浏览器 Cookie，不使用共享凭据存储，并拒绝重定向。实际私人连接要求 HTTPS，并使用系统证书校验；HTTP 仅保留给本机 loopback 测试。gateway 会接收访问所需的网络地址、请求路径、独立访问凭据及工作区选择等信息，其文件权限、运行日志、后端同步与保存规则由你选择的部署处理。将目录设为工作区会更新 gateway 的当前选择，供后续新对话使用；这不是删除或修改目录内文件。私有网络仍可能需要用户自行连接 Tailscale，Codex Buddy 不代替该服务完成网络认证。
+
+预览或共享由用户按需发起，应用会把下载的文件写入本机独立临时目录，再交给 Quick Look 或系统共享。临时文件、Quick Look 和共享接收方可能保留副本；应用不承诺关闭预览、清除连接或退出后立即擦除全部副本。当前原生界面不提供上传、编辑或删除文件的操作。
+
+“清除工作区连接”移除当前配置的 gateway 地址及该 origin 对应的钥匙串凭据，并清空当前连接状态。它不会删除 iCloud 或 gateway 文件，不会撤回已共享的副本，也不会自动清除其他 origin 保存的凭据或先前下载的临时副本。
 
 ## 系统权限
 
@@ -61,7 +69,7 @@ CloudSpace 未配置时展示公开的 [iCloud 工作区部署方法](https://gi
 
 ## 保存、清除与停止处理
 
-本机额度缓存会被较新的快照替换。iOS limitis 中的“清除 limitis 本机数据”只清除该功能的本机配对信息、快照和同步密钥，停止实时活动，并通知 Apple Watch 清除本地副本；不清除 SnapInsert 配对或 CloudSpace 网站数据。仅“断开连接”只移除本机的 Mac 配对，不等同于清除云端或推送服务数据。
+本机额度缓存会被较新的快照替换。统一设置中的“清除 Limits 本机数据”只清除该功能的本机配对信息、快照和同步密钥，停止实时活动，并通知 Apple Watch 清除本地副本；不清除 SnapInsert 配对或 CloudSpace 的连接、凭据及文件副本。SnapInsert 的移除配对单独操作；CloudSpace 的连接清理也按上述独立范围执行。仅“断开连接”只移除本机的 Mac 配对，不等同于清除云端或推送服务数据。
 
 CloudKit 保存最新状态，而不是由应用主动维护的一份历史额度列表；可使用 Apple 提供的 iCloud 数据管理功能管理适用的应用数据。仍在运行的 Mac 可能再次同步新数据。
 
