@@ -5,6 +5,7 @@ import SwiftUI
 @MainActor
 final class MacLifecycleDelegate: NSObject, NSApplicationDelegate {
     let store = MacStatusStore()
+    let snapReceiver = MacReceiver()
     let navigation = MacNavigationModel()
     let dockVisibilityController = MainWindowDockVisibilityController()
     let updateChecker = MacUpdateChecker()
@@ -38,6 +39,7 @@ final class MacLifecycleDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        snapReceiver.stop()
         store.stop()
         if let wakeObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(wakeObserver)

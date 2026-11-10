@@ -15,7 +15,10 @@ final class MacStatusStore {
     private var cloudPublishingTask: Task<Void, Never>?
     private var pendingCloudSnapshot: CodexStatusSnapshot?
     private var server: MacStatusServer?
+    private var lastCloudPublishedAt: Date?
     private let reader = LocalCodexStatusReader()
+    // Sandbox authorization covers quota log reads, not other processes' writer
+    // descriptors. Keep activity unknown rather than claiming whole-machine idle.
     @ObservationIgnored private let environmentMonitor = MacRefreshEnvironmentMonitor(
         activityMonitoringEnabled: !CodexFolderAccess.isSandboxed
     )
@@ -162,12 +165,20 @@ final class MacStatusStore {
                 statusText = "读取到较旧记录，保留最新额度"
                 return
             }
+            let shouldPublishCloud = Self.shouldPublishCloud(
+                previous: snapshot,
+                lastPublishedAt: lastCloudPublishedAt,
+                next: newSnapshot
+            )
             snapshot = newSnapshot
             CodexStatusCache.save(snapshot: newSnapshot)
             statusText = newSnapshot.source == .sessionLog
                 ? "已读取 Codex 日志记录"
                 : "读取成功"
-            publishToCloud(newSnapshot)
+            if shouldPublishCloud {
+                lastCloudPublishedAt = .now
+                publishToCloud(newSnapshot)
+            }
         } catch is CancellationError {
             return
         } catch {
@@ -187,6 +198,19 @@ final class MacStatusStore {
                 cloudStatus = await CodexStatusClient.publishToCloud(next)
             }
         }
+    }
+
+    private static func shouldPublishCloud(
+        previous: CodexStatusSnapshot?,
+        lastPublishedAt: Date?,
+        next: CodexStatusSnapshot
+    ) -> Bool {
+        guard let previous else { return true }
+        let valuesChanged = previous.windows != next.windows
+            || previous.planName != next.planName
+            || previous.creditsBalance != next.creditsBalance
+            || previous.resetCredits != next.resetCredits
+        return valuesChanged || lastPublishedAt.map { Date.now.timeIntervalSince($0) >= 5 * 60 } ?? true
     }
 
     private var localBaseURL: URL {

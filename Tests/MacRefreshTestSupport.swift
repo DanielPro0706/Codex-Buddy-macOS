@@ -27,7 +27,7 @@ actor LocalCodexStatusReader {
 }
 @MainActor final class MacRefreshEnvironmentMonitor {
     private var onChange: ((MacRefreshEnvironment) -> Void)?
-    init(codexHome: URL? = nil, activityMonitoringEnabled: Bool = true) {}
+    init(activityMonitoringEnabled: Bool = true) {}
     var current: MacRefreshEnvironment { RefreshTestState.environment }
     func start(onChange: @escaping @MainActor (MacRefreshEnvironment) -> Void) {
         self.onChange = onChange
@@ -75,4 +75,8 @@ final class MainWindowDockVisibilityController {}
 final class MacUpdateChecker { func startAutomaticCheck() {} }
 final class MacMenuBarController {
     init(store: MacStatusStore, navigation: MacNavigationModel, dockVisibilityController: MainWindowDockVisibilityController, updateChecker: MacUpdateChecker) {}
+}
+
+@MainActor final class MacReceiver {
+    func stop() {}
 }

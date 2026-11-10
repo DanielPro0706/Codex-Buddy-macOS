@@ -21,6 +21,14 @@ private nonisolated final class WriterInventoryFixture: @unchecked Sendable {
 @main
 struct MacRefreshEnvironmentTests {
     static func main() async throws {
+        let sandboxMonitor = MacRefreshEnvironmentMonitor(activityMonitoringEnabled: false)
+        sandboxMonitor.start { _ in }
+        await sandboxMonitor.refresh()
+        assert(sandboxMonitor.current.activity == .unknown)
+        assert(MacRefreshPolicy(environment: sandboxMonitor.current).phase == .normal)
+        sandboxMonitor.stop()
+        print("PASS: sandbox-disabled activity monitoring stays unknown and cannot enter idle backoff")
+
         let beginning = Date(timeIntervalSince1970: 1_000_000)
         let idle = MacRefreshEnvironment(allDisplaysAsleep: true, activity: .inactive)
         let awake = MacRefreshEnvironment(allDisplaysAsleep: false, activity: .inactive)

@@ -46,6 +46,11 @@ nonisolated enum CodexCloudSync {
         }
     }
 
+    struct CloudState: Sendable {
+        let snapshot: CodexStatusSnapshot?
+        let pushSecret: String?
+    }
+
     static func accountAvailability() async -> AccountAvailability {
         do {
             return switch try await CKContainer(identifier: containerIdentifier).accountStatus() {
@@ -89,6 +94,26 @@ nonisolated enum CodexCloudSync {
         }
     }
 
+    static func fetch() async throws -> CloudState {
+        try await requireAvailableAccount()
+        let database = CKContainer(identifier: containerIdentifier).privateCloudDatabase
+        let recordID = CKRecord.ID(recordName: recordName)
+        let results = try await database.records(
+            for: [recordID],
+            desiredKeys: [snapshotField, secretField, updatedAtField]
+        )
+        guard let result = results[recordID] else { return CloudState(snapshot: nil, pushSecret: nil) }
+
+        do {
+            let record = try result.get()
+            let snapshot = (record[snapshotField] as? Data)
+                .flatMap { try? CodexStatusCache.decoder.decode(CodexStatusSnapshot.self, from: $0) }
+            return CloudState(snapshot: snapshot, pushSecret: record[secretField] as? String)
+        } catch let error as CKError where error.code == .unknownItem {
+            return CloudState(snapshot: nil, pushSecret: nil)
+        }
+    }
+
     @discardableResult
     static func publish(snapshot: CodexStatusSnapshot, pushSecret: String) async throws -> CodexStatusSnapshot {
         try await requireAvailableAccount()
@@ -115,6 +140,12 @@ nonisolated enum CodexCloudSync {
         guard let saveResult = result.saveResults[recordID] else { return snapshot }
         _ = try saveResult.get()
         return snapshot
+    }
+
+    static func newest(local: CodexStatusSnapshot?) async -> CodexStatusSnapshot? {
+        guard let cloud = try? await fetch().snapshot else { return local }
+        guard let local else { return cloud }
+        return cloud.capturedAt > local.capturedAt ? cloud : local
     }
 
     private static func fetchRecord(database: CKDatabase, recordID: CKRecord.ID) async throws -> CKRecord {

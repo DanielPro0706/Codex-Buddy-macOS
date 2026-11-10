@@ -6,6 +6,36 @@ struct ContentView: View {
     let navigation: MacNavigationModel
     let dockVisibilityController: MainWindowDockVisibilityController
     let updateChecker: MacUpdateChecker
+    let snapReceiver: MacReceiver
+
+    var body: some View {
+        @Bindable var navigation = navigation
+        TabView(selection: $navigation.selectedFeature) {
+            Tab("limitis", systemImage: "gauge.with.dots.needle.67percent", value: .limitis) {
+                LimitisMacView(store: store, navigation: navigation,
+                               dockVisibilityController: dockVisibilityController,
+                               updateChecker: updateChecker)
+            }
+            Tab("snapinsert", systemImage: "camera.on.rectangle", value: .snapinsert) {
+                SnapInsertMacTab(receiver: snapReceiver)
+            }
+            Tab("CloudSpace", systemImage: "icloud", value: .cloudSpace) {
+                CloudSpaceTab()
+            }
+        }
+        .frame(minWidth: 760, minHeight: 560)
+        .background {
+            MainWindowDockLifecycleView(controller: dockVisibilityController)
+                .frame(width: 0, height: 0)
+        }
+    }
+}
+
+struct LimitisMacView: View {
+    let store: MacStatusStore
+    let navigation: MacNavigationModel
+    let dockVisibilityController: MainWindowDockVisibilityController
+    let updateChecker: MacUpdateChecker
 
     var body: some View {
         NavigationSplitView {
@@ -80,6 +110,7 @@ private struct MacDetailView: View {
 
 struct MacOverviewView: View {
     let store: MacStatusStore
+    @State private var showingExample = false
 
     var body: some View {
         ScrollView {
@@ -99,6 +130,9 @@ struct MacOverviewView: View {
                     Label(store.statusText, systemImage: store.isRefreshing ? "arrow.trianglehead.2.clockwise.rotate.90" : "circle.fill")
                         .foregroundStyle(.secondary)
                     Spacer()
+                    Button("查看示例", systemImage: "eye") {
+                        showingExample = true
+                    }
                     Button("立即读取", systemImage: "arrow.clockwise") {
                         Task { await store.refresh() }
                     }
@@ -109,13 +143,43 @@ struct MacOverviewView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
-        .navigationTitle("Codex 状态")
+        .navigationTitle("limitis")
+        .sheet(isPresented: $showingExample) { MacExampleStatusView() }
+    }
+}
+
+private struct MacExampleStatusView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                HStack {
+                    Label("演示数据", systemImage: "eye")
+                        .font(.title2.weight(.semibold))
+                    Spacer()
+                    Button("关闭") { dismiss() }
+                        .keyboardShortcut(.cancelAction)
+                }
+                Text("以下为虚构的额度示例，不代表你的账户。打开此示例不会查询额度或替换真实状态。")
+                    .foregroundStyle(.secondary)
+                CodexSnapshotHeader(
+                    planName: CodexStatusSnapshot.preview.planName,
+                    capturedAt: CodexStatusSnapshot.preview.capturedAt,
+                    isStale: false
+                )
+                MacStatusGlassContent(snapshot: .preview, cloudStatus: .notChecked, showsCloudStatus: false)
+            }
+            .padding(28)
+        }
+        .frame(width: 600, height: 650)
     }
 }
 
 private struct MacStatusGlassContent: View {
     let snapshot: CodexStatusSnapshot?
     let cloudStatus: CodexCloudSync.OperationStatus
+    var showsCloudStatus = true
 
     var body: some View {
         GlassEffectContainer(spacing: 18) {
@@ -174,11 +238,13 @@ private struct MacStatusGlassContent: View {
                     )
                 }
 
-                CodexCloudStatusView(status: cloudStatus)
-                    .glassEffect(
-                        .regular,
-                        in: RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    )
+                if showsCloudStatus {
+                    CodexCloudStatusView(status: cloudStatus)
+                        .glassEffect(
+                            .regular,
+                            in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        )
+                }
             }
         }
     }
@@ -260,6 +326,7 @@ private struct MenuBarSettingsView: View {
     let store: MacStatusStore
     let updateChecker: MacUpdateChecker
     @AppStorage(MenuBarDisplayStyle.storageKey) private var displayStyle = MenuBarDisplayStyle.progressBar
+    @State private var showingExample = false
 
     var body: some View {
         Form {
@@ -307,7 +374,7 @@ private struct MenuBarSettingsView: View {
             } header: {
                 Text("iCloud 同步")
             } footer: {
-                Text("Mac 每次成功读取 Codex 状态后都会上传一次 iCloud；iPhone 使用同一 Apple Account 时可读取最新状态。")
+                Text("额度变化时同步至 iCloud；未变化时至少间隔五分钟再次发布。iPhone 使用同一 Apple Account 可读取最新快照。开发者的推送服务还保存快照与推送路由信息，详见隐私政策。")
             }
 
             Section {
@@ -330,9 +397,15 @@ private struct MenuBarSettingsView: View {
                     : "Codex Buddy 会在启动后检查 GitHub 上的最新 macOS 完整版。")
             }
 
+            Section("帮助") {
+                Button("查看示例", systemImage: "eye") { showingExample = true }
+                Link("隐私政策", destination: URL(string: "https://github.com/DanielPro0706/Codex-Buddy-macOS/blob/main/docs/PRIVACY.md")!)
+                Link("支持与反馈", destination: URL(string: "https://github.com/DanielPro0706/Codex-Buddy-macOS/blob/main/docs/SUPPORT.md")!)
+            }
         }
         .formStyle(.grouped)
         .padding(20)
+        .sheet(isPresented: $showingExample) { MacExampleStatusView() }
     }
 }
 
@@ -437,6 +510,7 @@ struct MacMenuContent: View {
     }
 
     private func openMainWindow(tab: MacMainTab) {
+        navigation.selectedFeature = .limitis
         navigation.selectedTab = tab
         dockVisibilityController.prepareToShowMainWindow()
         NSApplication.shared.activate(ignoringOtherApps: true)
@@ -625,7 +699,7 @@ private struct MacCreditsBalanceRow: View {
 }
 
 #Preview {
-    ContentView(
+    LimitisMacView(
         store: MacStatusStore(previewSnapshot: .preview),
         navigation: MacNavigationModel(),
         dockVisibilityController: MainWindowDockVisibilityController(),

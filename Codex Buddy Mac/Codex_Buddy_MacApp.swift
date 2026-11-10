@@ -10,6 +10,7 @@ enum MacMainTab: Hashable {
 @Observable
 final class MacNavigationModel {
     var selectedTab: MacMainTab = .status
+    var selectedFeature: BuddyTab = .limitis
 }
 
 enum MenuBarDisplayStyle: String, CaseIterable, Identifiable {
@@ -38,7 +39,8 @@ struct Codex_Buddy_MacApp: App {
                 store: lifecycleDelegate.store,
                 navigation: lifecycleDelegate.navigation,
                 dockVisibilityController: lifecycleDelegate.dockVisibilityController,
-                updateChecker: lifecycleDelegate.updateChecker
+                updateChecker: lifecycleDelegate.updateChecker,
+                snapReceiver: lifecycleDelegate.snapReceiver
             )
         }
         .defaultSize(width: 860, height: 620)
@@ -198,6 +200,7 @@ struct OpenMainWindowCommands: Commands {
     }
 
     private func openMainWindow(tab: MacMainTab) {
+        navigation.selectedFeature = .limitis
         navigation.selectedTab = tab
         dockVisibilityController.prepareToShowMainWindow()
         NSApplication.shared.activate(ignoringOtherApps: true)

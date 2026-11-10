@@ -1,315 +1,596 @@
-// !$*UTF8*$!
-{
-	"classes" = {
-	};
-	"objectVersion" = "77";
-	"archiveVersion" = "1";
-	"validationLevel" = "1";
-	"objects" = {
-		"AA0000000000000000000001" = {
-			"isa" = "PBXFileSystemSynchronizedRootGroup";
-			"path" = "Shared";
-			"sourceTree" = "<group>";
-		};
-		"655F5BD7300A90E500BE9813" = {
-			"path" = "Codex Buddy Mac.app";
-			"isa" = "PBXFileReference";
-			"includeInIndex" = "0";
-			"explicitFileType" = "wrapper.application";
-			"sourceTree" = "BUILT_PRODUCTS_DIR";
-		};
-		"655F5BE0300A90E600BE9813" = {
-			"isa" = "XCBuildConfiguration";
-			"buildSettings" = {
-				"INFOPLIST_KEY_LSUIElement" = "YES";
-				"MARKETING_VERSION" = "1.1.2";
-				"ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS" = "YES";
-				"DEVELOPMENT_TEAM" = "A47AU67Z4Q";
-				"CODE_SIGN_ENTITLEMENTS" = "Codex Buddy Mac/CodexBuddyMacDirect.entitlements";
-				"COMBINE_HIDPI_IMAGES" = "YES";
-				"PRODUCT_BUNDLE_IDENTIFIER" = "com.danieldev.CodexBuddyNew";
-				"CURRENT_PROJECT_VERSION" = "11";
-				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
-				"REGISTER_APP_GROUPS" = "YES";
-				"STRING_CATALOG_GENERATE_SYMBOLS" = "YES";
-				"SWIFT_DEFAULT_ACTOR_ISOLATION" = "MainActor";
-				"MACOSX_DEPLOYMENT_TARGET" = "26.0";
-				"CODE_SIGN_STYLE" = "Automatic";
-				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
-				"SDKROOT" = "macosx";
-				"LD_RUNPATH_SEARCH_PATHS" = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				"SWIFT_VERSION" = "5.0";
-				"PRODUCT_NAME" = "$(TARGET_NAME)";
-				"SWIFT_APPROACHABLE_CONCURRENCY" = "YES";
-				"SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY" = "YES";
-				"INFOPLIST_KEY_NSHumanReadableCopyright" = "";
-				"ENABLE_PREVIEWS" = "YES";
-				"ENABLE_APP_SANDBOX" = "NO";
-				"ENABLE_HARDENED_RUNTIME" = "YES";
-				"ENABLE_USER_SELECTED_FILES" = "readonly";
-				"SWIFT_EMIT_LOC_STRINGS" = "YES";
-				"GENERATE_INFOPLIST_FILE" = "YES";
-			};
-			"name" = "Debug";
-		};
-		"655F5BD4300A90E500BE9813" = {
-			"isa" = "PBXFrameworksBuildPhase";
-			"files" = (
-			);
-		};
-		"655F5BD8300A90E500BE9813" = {
-			"isa" = "PBXFileSystemSynchronizedRootGroup";
-			"path" = "Codex Buddy Mac";
-			"sourceTree" = "<group>";
-		};
-		"655F5BE1300A90E600BE9813" = {
-			"isa" = "XCBuildConfiguration";
-			"buildSettings" = {
-				"INFOPLIST_KEY_LSUIElement" = "YES";
-				"MARKETING_VERSION" = "1.1.2";
-				"ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS" = "YES";
-				"DEVELOPMENT_TEAM" = "A47AU67Z4Q";
-				"CODE_SIGN_ENTITLEMENTS" = "Codex Buddy Mac/CodexBuddyMacAppStore.entitlements";
-				"INFOPLIST_KEY_LSApplicationCategoryType" = "public.app-category.developer-tools";
-				"PRODUCT_BUNDLE_IDENTIFIER" = "com.danieldev.CodexBuddyNew";
-				"COMBINE_HIDPI_IMAGES" = "YES";
-				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
-				"CURRENT_PROJECT_VERSION" = "11";
-				"REGISTER_APP_GROUPS" = "YES";
-				"STRING_CATALOG_GENERATE_SYMBOLS" = "YES";
-				"MACOSX_DEPLOYMENT_TARGET" = "26.0";
-				"SWIFT_DEFAULT_ACTOR_ISOLATION" = "MainActor";
-				"CODE_SIGN_STYLE" = "Automatic";
-				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
-				"SDKROOT" = "macosx";
-				"LD_RUNPATH_SEARCH_PATHS" = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				"SWIFT_VERSION" = "5.0";
-				"PRODUCT_NAME" = "$(TARGET_NAME)";
-				"SWIFT_APPROACHABLE_CONCURRENCY" = "YES";
-				"SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY" = "YES";
-				"INFOPLIST_KEY_NSHumanReadableCopyright" = "";
-				"ENABLE_PREVIEWS" = "YES";
-				"ENABLE_APP_SANDBOX" = "YES";
-				"ENABLE_HARDENED_RUNTIME" = "YES";
-				"ENABLE_USER_SELECTED_FILES" = "readwrite";
-				"SWIFT_EMIT_LOC_STRINGS" = "YES";
-				"GENERATE_INFOPLIST_FILE" = "YES";
-			};
-			"name" = "Release";
-		};
-		"655F5BAF300A8F3A00BE9813" = {
-			"isa" = "XCBuildConfiguration";
-			"buildSettings" = {
-				"DEVELOPMENT_TEAM" = "M5XVXSXTND";
-				"CLANG_WARN_RANGE_LOOP_ANALYSIS" = "YES";
-				"ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS" = "YES";
-				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
-				"CLANG_WARN_INFINITE_RECURSION" = "YES";
-				"ONLY_ACTIVE_ARCH" = "YES";
-				"GCC_WARN_UNUSED_VARIABLE" = "YES";
-				"CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING" = "YES";
-				"CLANG_WARN_UNGUARDED_AVAILABILITY" = "YES_AGGRESSIVE";
-				"COPY_PHASE_STRIP" = "NO";
-				"CLANG_WARN_BOOL_CONVERSION" = "YES";
-				"CLANG_WARN_ENUM_CONVERSION" = "YES";
-				"CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS" = "YES";
-				"CLANG_WARN_COMMA" = "YES";
-				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG $(inherited)";
-				"CLANG_WARN_INT_CONVERSION" = "YES";
-				"ENABLE_STRICT_OBJC_MSGSEND" = "YES";
-				"CLANG_WARN_DOCUMENTATION_COMMENTS" = "YES";
-				"CLANG_WARN_SUSPICIOUS_MOVE" = "YES";
-				"CLANG_WARN_EMPTY_BODY" = "YES";
-				"MTL_ENABLE_DEBUG_INFO" = "INCLUDE_SOURCE";
-				"MTL_FAST_MATH" = "YES";
-				"CLANG_ENABLE_OBJC_ARC" = "YES";
-				"GCC_WARN_UNINITIALIZED_AUTOS" = "YES_AGGRESSIVE";
-				"GCC_C_LANGUAGE_STANDARD" = "gnu17";
-				"CLANG_ENABLE_MODULES" = "YES";
-				"ALWAYS_SEARCH_USER_PATHS" = "NO";
-				"ENABLE_TESTABILITY" = "YES";
-				"CLANG_WARN_DIRECT_OBJC_ISA_USAGE" = "YES_ERROR";
-				"CLANG_WARN_CONSTANT_CONVERSION" = "YES";
-				"GCC_NO_COMMON_BLOCKS" = "YES";
-				"CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF" = "YES";
-				"CLANG_WARN_OBJC_ROOT_CLASS" = "YES_ERROR";
-				"LOCALIZATION_PREFERS_STRING_CATALOGS" = "YES";
-				"CLANG_CXX_LANGUAGE_STANDARD" = "gnu++20";
-				"GCC_WARN_64_TO_32_BIT_CONVERSION" = "YES";
-				"DEBUG_INFORMATION_FORMAT" = "dwarf";
-				"CLANG_WARN__DUPLICATE_METHOD_MATCH" = "YES";
-				"GCC_DYNAMIC_NO_PIC" = "NO";
-				"GCC_WARN_UNDECLARED_SELECTOR" = "YES";
-				"CLANG_ANALYZER_NONNULL" = "YES";
-				"CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION" = "YES_AGGRESSIVE";
-				"CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER" = "YES";
-				"CLANG_ENABLE_OBJC_WEAK" = "YES";
-				"CLANG_WARN_STRICT_PROTOTYPES" = "YES";
-				"GCC_OPTIMIZATION_LEVEL" = "0";
-				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
-				"GCC_WARN_ABOUT_RETURN_TYPE" = "YES_ERROR";
-				"GCC_WARN_UNUSED_FUNCTION" = "YES";
-				"CLANG_WARN_UNREACHABLE_CODE" = "YES";
-				"CLANG_WARN_NON_LITERAL_NULL_CONVERSION" = "YES";
-				"GCC_PREPROCESSOR_DEFINITIONS" = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				"CLANG_WARN_OBJC_LITERAL_CONVERSION" = "YES";
-			};
-			"name" = "Debug";
-		};
-		"655F5BD5300A90E500BE9813" = {
-			"isa" = "PBXResourcesBuildPhase";
-			"files" = (
-			);
-		};
-		"655F5B9D300A8F3900BE9813" = {
-			"isa" = "PBXGroup";
-			"sourceTree" = "<group>";
-			"children" = (
-				"655F5BD8300A90E500BE9813",
-				"AA0000000000000000000001",
-				"655F5BA7300A8F3900BE9813",
-			);
-		};
-		"655F5BDF300A90E600BE9813" = {
-			"isa" = "XCConfigurationList";
-			"buildConfigurations" = (
-				"655F5BE0300A90E600BE9813",
-				"655F5BE1300A90E600BE9813",
-			);
-			"defaultConfigurationName" = "Release";
-		};
-		"655F5BD6300A90E500BE9813" = {
-			"buildConfigurationList" = "655F5BDF300A90E600BE9813";
-			"productReference" = "655F5BD7300A90E500BE9813";
-			"productType" = "com.apple.product-type.application";
-			"productName" = "Codex Buddy Mac";
-			"isa" = "PBXNativeTarget";
-			"fileSystemSynchronizedGroups" = (
-				"655F5BD8300A90E500BE9813",
-				"AA0000000000000000000001",
-			);
-			"buildPhases" = (
-				"655F5BD3300A90E500BE9813",
-				"655F5BD4300A90E500BE9813",
-				"655F5BD5300A90E500BE9813",
-			);
-			"name" = "Codex Buddy Mac";
-			"buildRules" = (
-			);
-		};
-		"655F5BA7300A8F3900BE9813" = {
-			"isa" = "PBXGroup";
-			"name" = "Products";
-			"children" = (
-				"655F5BD7300A90E500BE9813",
-			);
-			"sourceTree" = "<group>";
-		};
-		"655F5B9E300A8F3900BE9813" = {
-			"buildConfigurationList" = "655F5BA1300A8F3900BE9813";
-			"targets" = (
-				"655F5BD6300A90E500BE9813",
-			);
-			"minimizedProjectReferenceProxies" = "1";
-			"developmentRegion" = "en";
-			"knownRegions" = (
-				"en",
-				"Base",
-			);
-			"isa" = "PBXProject";
-			"productRefGroup" = "655F5BA7300A8F3900BE9813";
-			"projectDirPath" = "";
-			"attributes" = {
-				"LastSwiftUpdateCheck" = "2700";
-				"BuildIndependentTargetsInParallel" = "1";
-				"LastUpgradeCheck" = "2700";
-				"TargetAttributes" = {
-					"655F5BD6300A90E500BE9813" = {
-						"CreatedOnToolsVersion" = "27.0";
-					};
-				};
-			};
-			"hasScannedForEncodings" = "0";
-			"projectRoot" = "";
-			"preferredProjectObjectVersion" = "77";
-			"mainGroup" = "655F5B9D300A8F3900BE9813";
-		};
-		"655F5BD3300A90E500BE9813" = {
-			"isa" = "PBXSourcesBuildPhase";
-			"files" = (
-			);
-		};
-		"655F5BB0300A8F3A00BE9813" = {
-			"isa" = "XCBuildConfiguration";
-			"buildSettings" = {
-				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
-				"CLANG_WARN_DOCUMENTATION_COMMENTS" = "YES";
-				"CLANG_WARN_DIRECT_OBJC_ISA_USAGE" = "YES_ERROR";
-				"CLANG_ENABLE_OBJC_ARC" = "YES";
-				"CLANG_WARN_UNGUARDED_AVAILABILITY" = "YES_AGGRESSIVE";
-				"CLANG_WARN__DUPLICATE_METHOD_MATCH" = "YES";
-				"CLANG_WARN_SUSPICIOUS_MOVE" = "YES";
-				"CLANG_ENABLE_OBJC_WEAK" = "YES";
-				"CLANG_WARN_INFINITE_RECURSION" = "YES";
-				"ENABLE_NS_ASSERTIONS" = "NO";
-				"GCC_WARN_UNDECLARED_SELECTOR" = "YES";
-				"SWIFT_COMPILATION_MODE" = "wholemodule";
-				"CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION" = "YES_AGGRESSIVE";
-				"CLANG_CXX_LANGUAGE_STANDARD" = "gnu++20";
-				"LOCALIZATION_PREFERS_STRING_CATALOGS" = "YES";
-				"CLANG_WARN_BOOL_CONVERSION" = "YES";
-				"CLANG_WARN_UNREACHABLE_CODE" = "YES";
-				"ENABLE_STRICT_OBJC_MSGSEND" = "YES";
-				"CLANG_ANALYZER_NONNULL" = "YES";
-				"CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING" = "YES";
-				"CLANG_WARN_STRICT_PROTOTYPES" = "YES";
-				"CLANG_WARN_ENUM_CONVERSION" = "YES";
-				"CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER" = "YES";
-				"GCC_WARN_64_TO_32_BIT_CONVERSION" = "YES";
-				"ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS" = "YES";
-				"CLANG_WARN_EMPTY_BODY" = "YES";
-				"GCC_WARN_ABOUT_RETURN_TYPE" = "YES_ERROR";
-				"GCC_WARN_UNINITIALIZED_AUTOS" = "YES_AGGRESSIVE";
-				"CLANG_WARN_COMMA" = "YES";
-				"GCC_C_LANGUAGE_STANDARD" = "gnu17";
-				"GCC_WARN_UNUSED_VARIABLE" = "YES";
-				"CLANG_WARN_RANGE_LOOP_ANALYSIS" = "YES";
-				"CLANG_ENABLE_MODULES" = "YES";
-				"CLANG_WARN_INT_CONVERSION" = "YES";
-				"ALWAYS_SEARCH_USER_PATHS" = "NO";
-				"CLANG_WARN_OBJC_ROOT_CLASS" = "YES_ERROR";
-				"CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS" = "YES";
-				"COPY_PHASE_STRIP" = "NO";
-				"CLANG_WARN_CONSTANT_CONVERSION" = "YES";
-				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
-				"GCC_NO_COMMON_BLOCKS" = "YES";
-				"MTL_ENABLE_DEBUG_INFO" = "NO";
-				"CLANG_WARN_NON_LITERAL_NULL_CONVERSION" = "YES";
-				"MTL_FAST_MATH" = "YES";
-				"GCC_WARN_UNUSED_FUNCTION" = "YES";
-				"CLANG_WARN_OBJC_LITERAL_CONVERSION" = "YES";
-				"DEVELOPMENT_TEAM" = "M5XVXSXTND";
-				"CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF" = "YES";
-			};
-			"name" = "Release";
-		};
-		"655F5BA1300A8F3900BE9813" = {
-			"isa" = "XCConfigurationList";
-			"buildConfigurations" = (
-				"655F5BAF300A8F3A00BE9813",
-				"655F5BB0300A8F3A00BE9813",
-			);
-			"defaultConfigurationName" = "Release";
-		};
-	};
-	"rootObject" = "655F5B9E300A8F3900BE9813";
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>archiveVersion</key>
+	<string>1</string>
+	<key>classes</key>
+	<dict/>
+	<key>objectVersion</key>
+	<string>77</string>
+	<key>objects</key>
+	<dict>
+		<key>655F5B9D300A8F3900BE9813</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>655F5BD8300A90E500BE9813</string>
+				<string>AA0000000000000000000001</string>
+				<string>655F5BA7300A8F3900BE9813</string>
+				<string>D070016A2264B0639EBF2561</string>
+				<string>EA55D0CAC4B47C7B3B059962</string>
+				<string>D76FE2CBF3360BBFF5698A61</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>655F5B9E300A8F3900BE9813</key>
+		<dict>
+			<key>attributes</key>
+			<dict>
+				<key>BuildIndependentTargetsInParallel</key>
+				<string>1</string>
+				<key>LastSwiftUpdateCheck</key>
+				<string>2700</string>
+				<key>LastUpgradeCheck</key>
+				<string>2700</string>
+				<key>TargetAttributes</key>
+				<dict>
+					<key>655F5BD6300A90E500BE9813</key>
+					<dict>
+						<key>CreatedOnToolsVersion</key>
+						<string>27.0</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>buildConfigurationList</key>
+			<string>655F5BA1300A8F3900BE9813</string>
+			<key>developmentRegion</key>
+			<string>en</string>
+			<key>hasScannedForEncodings</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXProject</string>
+			<key>knownRegions</key>
+			<array>
+				<string>en</string>
+				<string>Base</string>
+			</array>
+			<key>mainGroup</key>
+			<string>655F5B9D300A8F3900BE9813</string>
+			<key>minimizedProjectReferenceProxies</key>
+			<string>1</string>
+			<key>preferredProjectObjectVersion</key>
+			<string>77</string>
+			<key>productRefGroup</key>
+			<string>655F5BA7300A8F3900BE9813</string>
+			<key>projectDirPath</key>
+			<string></string>
+			<key>projectRoot</key>
+			<string></string>
+			<key>targets</key>
+			<array>
+				<string>655F5BD6300A90E500BE9813</string>
+			</array>
+		</dict>
+		<key>655F5BA1300A8F3900BE9813</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>655F5BAF300A8F3A00BE9813</string>
+				<string>655F5BB0300A8F3A00BE9813</string>
+			</array>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>655F5BA7300A8F3900BE9813</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>655F5BD7300A90E500BE9813</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>655F5BAF300A8F3A00BE9813</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NONNULL</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++20</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_WEAK</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_COMMA</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_DOCUMENTATION_COMMENTS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INFINITE_RECURSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_NON_LITERAL_NULL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_LITERAL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER</key>
+				<string>YES</string>
+				<key>CLANG_WARN_RANGE_LOOP_ANALYSIS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_STRICT_PROTOTYPES</key>
+				<string>YES</string>
+				<key>CLANG_WARN_SUSPICIOUS_MOVE</key>
+				<string>YES</string>
+				<key>CLANG_WARN_UNGUARDED_AVAILABILITY</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>DEBUG_INFORMATION_FORMAT</key>
+				<string>dwarf</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>M5XVXSXTND</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>ENABLE_TESTABILITY</key>
+				<string>YES</string>
+				<key>ENABLE_USER_SCRIPT_SANDBOXING</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu17</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_NO_COMMON_BLOCKS</key>
+				<string>YES</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>LOCALIZATION_PREFERS_STRING_CATALOGS</key>
+				<string>YES</string>
+				<key>MTL_ENABLE_DEBUG_INFO</key>
+				<string>INCLUDE_SOURCE</string>
+				<key>MTL_FAST_MATH</key>
+				<string>YES</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>SWIFT_ACTIVE_COMPILATION_CONDITIONS</key>
+				<string>DEBUG $(inherited)</string>
+				<key>SWIFT_OPTIMIZATION_LEVEL</key>
+				<string>-Onone</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>655F5BB0300A8F3A00BE9813</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NONNULL</key>
+				<string>YES</string>
+				<key>CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++20</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_WEAK</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_COMMA</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_DOCUMENTATION_COMMENTS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INFINITE_RECURSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_NON_LITERAL_NULL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_LITERAL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER</key>
+				<string>YES</string>
+				<key>CLANG_WARN_RANGE_LOOP_ANALYSIS</key>
+				<string>YES</string>
+				<key>CLANG_WARN_STRICT_PROTOTYPES</key>
+				<string>YES</string>
+				<key>CLANG_WARN_SUSPICIOUS_MOVE</key>
+				<string>YES</string>
+				<key>CLANG_WARN_UNGUARDED_AVAILABILITY</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>DEBUG_INFORMATION_FORMAT</key>
+				<string>dwarf-with-dsym</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>M5XVXSXTND</string>
+				<key>ENABLE_NS_ASSERTIONS</key>
+				<string>NO</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>ENABLE_USER_SCRIPT_SANDBOXING</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu17</string>
+				<key>GCC_NO_COMMON_BLOCKS</key>
+				<string>YES</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>LOCALIZATION_PREFERS_STRING_CATALOGS</key>
+				<string>YES</string>
+				<key>MTL_ENABLE_DEBUG_INFO</key>
+				<string>NO</string>
+				<key>MTL_FAST_MATH</key>
+				<string>YES</string>
+				<key>SWIFT_COMPILATION_MODE</key>
+				<string>wholemodule</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>655F5BD3300A90E500BE9813</key>
+		<dict>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+		</dict>
+		<key>655F5BD4300A90E500BE9813</key>
+		<dict>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+		</dict>
+		<key>655F5BD5300A90E500BE9813</key>
+		<dict>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+		</dict>
+		<key>655F5BD6300A90E500BE9813</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>655F5BDF300A90E600BE9813</string>
+			<key>buildPhases</key>
+			<array>
+				<string>655F5BD3300A90E500BE9813</string>
+				<string>655F5BD4300A90E500BE9813</string>
+				<string>655F5BD5300A90E500BE9813</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>fileSystemSynchronizedGroups</key>
+			<array>
+				<string>655F5BD8300A90E500BE9813</string>
+				<string>AA0000000000000000000001</string>
+				<string>D070016A2264B0639EBF2561</string>
+				<string>EA55D0CAC4B47C7B3B059962</string>
+				<string>D76FE2CBF3360BBFF5698A61</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>Codex Buddy Mac</string>
+			<key>productName</key>
+			<string>Codex Buddy Mac</string>
+			<key>productReference</key>
+			<string>655F5BD7300A90E500BE9813</string>
+			<key>productType</key>
+			<string>com.apple.product-type.application</string>
+		</dict>
+		<key>655F5BD7300A90E500BE9813</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.application</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>Codex Buddy Mac.app</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>655F5BD8300A90E500BE9813</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileSystemSynchronizedRootGroup</string>
+			<key>path</key>
+			<string>Codex Buddy Mac</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>655F5BDF300A90E600BE9813</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>655F5BE0300A90E600BE9813</string>
+				<string>655F5BE1300A90E600BE9813</string>
+			</array>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>655F5BE0300A90E600BE9813</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME</key>
+				<string>AccentColor</string>
+				<key>ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS</key>
+				<string>YES</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>Codex Buddy Mac/CodexBuddyMacDirect.entitlements</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>COMBINE_HIDPI_IMAGES</key>
+				<string>YES</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>12</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>A47AU67Z4Q</string>
+				<key>ENABLE_APP_SANDBOX</key>
+				<string>NO</string>
+				<key>ENABLE_HARDENED_RUNTIME</key>
+				<string>YES</string>
+				<key>ENABLE_PREVIEWS</key>
+				<string>YES</string>
+				<key>ENABLE_USER_SELECTED_FILES</key>
+				<string>readonly</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>YES</string>
+				<key>INFOPLIST_KEY_LSUIElement</key>
+				<string>YES</string>
+				<key>INFOPLIST_KEY_NSHumanReadableCopyright</key>
+				<string></string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>26.0</string>
+				<key>MARKETING_VERSION</key>
+				<string>1.2</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.danieldev.CodexBuddyNew</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>REGISTER_APP_GROUPS</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>macosx</string>
+				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
+				<string>YES</string>
+				<key>SWIFT_APPROACHABLE_CONCURRENCY</key>
+				<string>YES</string>
+				<key>SWIFT_DEFAULT_ACTOR_ISOLATION</key>
+				<string>MainActor</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
+				<key>SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>655F5BE1300A90E600BE9813</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME</key>
+				<string>AccentColor</string>
+				<key>ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS</key>
+				<string>YES</string>
+				<key>CODE_SIGN_ENTITLEMENTS</key>
+				<string>Codex Buddy Mac/CodexBuddyMacAppStore.entitlements</string>
+				<key>CODE_SIGN_STYLE</key>
+				<string>Automatic</string>
+				<key>COMBINE_HIDPI_IMAGES</key>
+				<string>YES</string>
+				<key>CURRENT_PROJECT_VERSION</key>
+				<string>12</string>
+				<key>DEVELOPMENT_TEAM</key>
+				<string>A47AU67Z4Q</string>
+				<key>ENABLE_APP_SANDBOX</key>
+				<string>YES</string>
+				<key>ENABLE_HARDENED_RUNTIME</key>
+				<string>YES</string>
+				<key>ENABLE_PREVIEWS</key>
+				<string>YES</string>
+				<key>ENABLE_USER_SELECTED_FILES</key>
+				<string>readwrite</string>
+				<key>GENERATE_INFOPLIST_FILE</key>
+				<string>YES</string>
+				<key>INFOPLIST_KEY_LSApplicationCategoryType</key>
+				<string>public.app-category.developer-tools</string>
+				<key>INFOPLIST_KEY_LSUIElement</key>
+				<string>YES</string>
+				<key>INFOPLIST_KEY_NSHumanReadableCopyright</key>
+				<string></string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>@executable_path/../Frameworks</string>
+				</array>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>26.0</string>
+				<key>MARKETING_VERSION</key>
+				<string>1.2</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.danieldev.CodexBuddyNew</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>REGISTER_APP_GROUPS</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>macosx</string>
+				<key>STRING_CATALOG_GENERATE_SYMBOLS</key>
+				<string>YES</string>
+				<key>SWIFT_APPROACHABLE_CONCURRENCY</key>
+				<string>YES</string>
+				<key>SWIFT_DEFAULT_ACTOR_ISOLATION</key>
+				<string>MainActor</string>
+				<key>SWIFT_EMIT_LOC_STRINGS</key>
+				<string>YES</string>
+				<key>SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY</key>
+				<string>YES</string>
+				<key>SWIFT_VERSION</key>
+				<string>5.0</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>AA0000000000000000000001</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileSystemSynchronizedRootGroup</string>
+			<key>path</key>
+			<string>Shared</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D070016A2264B0639EBF2561</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileSystemSynchronizedRootGroup</string>
+			<key>path</key>
+			<string>BuddyCore</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D76FE2CBF3360BBFF5698A61</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileSystemSynchronizedRootGroup</string>
+			<key>path</key>
+			<string>BuddySnapShared</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>EA55D0CAC4B47C7B3B059962</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileSystemSynchronizedRootGroup</string>
+			<key>path</key>
+			<string>BuddyCloudSpace</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+	</dict>
+	<key>rootObject</key>
+	<string>655F5B9E300A8F3900BE9813</string>
+	<key>validationLevel</key>
+	<string>1</string>
+</dict>
+</plist>

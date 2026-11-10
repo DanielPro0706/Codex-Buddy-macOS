@@ -1,51 +1,31 @@
-# Codex Buddy for macOS
+# Codex Buddy
 
-Codex Buddy 是一款原生 SwiftUI 菜单栏应用，用于在 Mac 上读取本机 Codex 额度状态，并把最新状态同步到用户自己的 Apple 设备。
+Codex Buddy 在 iOS 和 macOS 中提供三个 Tab：
 
-> 本项目不是 OpenAI 官方产品，也不提供、修改或绕过 Codex 服务。
+| Tab | 功能 |
+| --- | --- |
+| limitis | 读取 Mac 的 Codex 额度，查看恢复时间，并同步至用户自己的 iPhone、Apple Watch、小组件和实时活动。 |
+| snapinsert | iPhone 拍照后通过端到端加密中转至 Mac 剪贴板，可在授权后向目标应用发送粘贴指令。 |
+| CloudSpace | 配置自己的 gateway 后浏览其网页；未配置时展示公开的 iCloud 工作区部署方法。 |
 
-## 功能
+本项目不是 OpenAI 官方产品。版本 `1.2`（Build `12`）合并上述功能，保留原有额度读取、配对和后台刷新。
 
-- 显示 5 小时与每周额度窗口、恢复时间和可用重置次数
-- 支持菜单栏快速查看与手动刷新
-- 保留局域网配对和本地状态服务
-- 可通过用户自己的 CloudKit 私有数据库同步最新状态
-- App Store 沙盒版支持手动授权 `.codex` 文件夹
-- 直接分发版可通过本机 `codex app-server` 读取状态，并回退到本地会话日志
+## SnapInsert 账户与购买
 
-本次发行候选版本：`1.1.2`（Build `11`）。本仓库只包含 macOS App 与 Mac 所需的同步、状态模型和界面代码，不包含 iOS/watchOS App、Widget、资源或构建目标。GitHub DMG 为直接分发版。
+iOS 使用 Apple 签名的 AppTransaction 授权，服务端按运行环境与 `appTransactionID` 的摘要关联账户。免费额度为每个经 Apple 验证的 App Store 账户每个北京时间自然月 100 张。已验证邀请码或有效月订阅提供不限张数的权益，仍受共享中转容量和排队限制。App Store 购买账户可能与 iCloud 登录账户不同。
 
-## 后台刷新与流量
+订阅产品标识为 `com.danieldev.CodexBuddyNew.snapinsert.monthly`。实际价格以 Apple 购买界面为准；App Store Connect 产品、签名校验、生产订阅服务器通知及服务端部署需配套完成，单独编译源码不会创建或上架订阅产品。付款由 Apple 处理，应用提供恢复购买；取消自动续订须在 Apple 订阅管理中完成。
 
-- 正常使用或检测到活动对话时，接电每 15 秒刷新，使用电池每 30 秒刷新。
-- 所有显示器休眠，或者 Mac 合盖且没有外接显示器，或者合盖并且外接显示处于锁屏、屏保或系统休眠状态时，可进入空闲检查。
-- 确认没有活动对话后，先等待 30 分钟；到期再次确认仍空闲后，改为每小时检查。恢复使用或新任务开始会立即返回正常频率。
-- 正常刷新复用一个已初始化的 `codex app-server`。低频检查之间关闭该服务，避免其自身的目录刷新任务持续联网；失败重建也有退避。
-- 活动判断只覆盖当前 `CODEX_HOME`（默认 `~/.codex`）内正常保存历史的本机会话。不保存记录的临时上下文不在识别范围内；实际检测失败时保持正常刷新频率。
+照片不写入中转服务器磁盘。服务端仍持久保存账户关联摘要、月用量、传输去重标识和订阅状态及交易标识；这些记录不能表述为“不记录任何数据”。Mac 剪贴板和已插入的图片由系统及目标应用分别管理。详细范围见 [隐私政策](docs/PRIVACY.md)。
 
-完整的任务联动低频模式用于直接分发版。Mac App Store 沙盒版按用户授权的本地日志读取额度；它采用接电 15 秒、电池 30 秒的正常频率，不扫描其他进程或启动外部 CLI。
+## CloudSpace
 
-显示、电源与任务检测在本机完成，不通过启动新的 Codex 服务来检测任务。外接显示器的休眠、断开等状态以 macOS 上报为准。
+[开源部署方法](https://github.com/DanielPro0706/codex-icloud-workspace)说明如何搭建用户自己的 iCloud 工作区 gateway。Codex Buddy 保存用户填入的网页地址，并由 WebKit 展示该网页；认证、文件权限、后端同步和私有网络由用户的部署处理。源代码不包含开发者个人 gateway 地址、密钥或私人文件。
 
-## 构建
+## 源码与构建
 
-1. 使用 Xcode 27.1 或兼容版本打开 `Codex Buddy.xcodeproj`。
-2. 选择 `Codex Buddy Mac` scheme。
-3. 如需自己的签名与 iCloud，请替换 Team、Bundle Identifier、App Group 和 CloudKit Container。
-4. Debug 配置对应直接分发能力；Release 配置对应 Mac App Store 沙盒能力。
+完整的 iOS、macOS、watchOS 和 Widget 源码保存在私有仓库，打开 `Codex Buddy New.xcodeproj`。公开的 [macOS 仓库](https://github.com/DanielPro0706/Codex-Buddy-macOS)仅包含 Mac 端及必需共享模块，打开其 `Codex Buddy.xcodeproj`；不包含私有 iOS 目标或个人 gateway 配置。
 
-项目最低部署目标为 macOS 26。
+macOS 最低目标为 26。直接分发版可使用本机已登录的 Codex CLI；Mac App Store 沙盒版只读取用户明确授权目录中的日志。Release 的沙盒构建通过 App Store 更新，直接分发构建从 GitHub Release 检查更新。
 
-## 隐私
-
-应用处理额度状态、刷新时间、配对信息和本地授权。任务检测仅在本机解析已保存日志的任务生命周期元数据；日志、对话正文、提示词和项目文件不上传到 CloudKit。CloudKit 仅保存用户自己的额度状态快照。
-
-云中继和推送还会使用开发者的 Cloudflare 服务，保存必要的额度快照、同步标识和推送路由信息。完整的数据范围及本地／远程清除区别见[隐私政策](docs/PRIVACY.md)；问题反馈见[支持说明](docs/SUPPORT.md)。
-
-## License
-
-MIT License。详见 [LICENSE](LICENSE)。
-
-## 直接分发构建
-
-Release 配置可用 `ENABLE_APP_SANDBOX=NO CODE_SIGN_ENTITLEMENTS="Codex Buddy Mac/CodexBuddyMacDirect.entitlements"` 构建直接分发版。正式 DMG 使用 Developer ID 签名，并在 Apple 公证及 staple、Gatekeeper 验证通过后发布。
+需要自己的 Team、Bundle Identifier、CloudKit Container、签名和后端服务才能独立发布。直接分发版需 Developer ID 签名、公证及 Gatekeeper 验证；TestFlight 构建需 App Store Connect 配置。验证结果与发布状态应分别核对。
