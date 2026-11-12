@@ -40,15 +40,7 @@ struct MacSettingsView: View {
             Text("当前照片连接将断开，需要重新扫描统一二维码。")
         }
         .sheet(isPresented: $showingPrivacy) {
-            NavigationStack {
-                BuddyPrivacyView()
-                    .toolbar {
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("完成") { showingPrivacy = false }
-                        }
-                    }
-            }
-            .frame(minWidth: 500, idealWidth: 600, minHeight: 480, idealHeight: 620)
+            MacPrivacyView()
         }
     }
 

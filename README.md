@@ -8,7 +8,7 @@ Codex Buddy 的 iOS 版设有 Limits、SnapInsert、CloudSpace 和设置四个 T
 | SnapInsert | iOS、macOS | iPhone 拍照后通过端到端加密中转至 Mac 剪贴板，可在授权后向目标应用发送粘贴指令。 |
 | CloudSpace | 仅 iOS | 原生查看自有 gateway 的连接状态、目录和当前工作区，按需下载预览或共享文件；未配置时展示开源部署方法。 |
 
-本项目不是 OpenAI 官方产品。macOS 源码版本为 `1.2.2`（Build `14`），统一菜单栏图标、连接和设置页的卡片样式与字体，保留原有额度读取、配对和后台刷新。
+本项目不是 OpenAI 官方产品。macOS 源码版本为 `1.2.3`（Build `15`），统一菜单栏图标、连接和设置页的卡片样式与字体，保留原有额度读取、配对和后台刷新。
 
 ## 统一配对
 
