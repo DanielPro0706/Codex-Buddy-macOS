@@ -337,7 +337,11 @@ struct CodexSnapshotHeader: View {
             CodexSymbol(size: 42)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Codex")
+                    #if os(macOS)
+                    .font(BuddyMacTypography.pageTitle)
+                    #else
                     .font(.title2.bold())
+                    #endif
                 Text(planName?.uppercased() ?? "等待数据")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)

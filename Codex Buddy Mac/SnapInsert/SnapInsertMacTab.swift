@@ -18,7 +18,7 @@ struct SnapInsertMacTab: View {
                         }
                         if let receipt = receiver.lastReceipt {
                             Text(receipt)
-                                .font(.callout)
+                                .font(BuddyMacTypography.detail)
                                 .foregroundStyle(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .textSelection(.enabled)
@@ -33,6 +33,7 @@ struct SnapInsertMacTab: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
+        .font(BuddyMacTypography.body)
         .background { BuddyPageBackground() }
         .navigationTitle("SnapInsert")
         .onAppear { receiver.refreshAccessibility() }
@@ -42,13 +43,13 @@ struct SnapInsertMacTab: View {
         HStack(spacing: 12) {
             Image(systemName: "camera.aperture")
                 .font(.title2)
-                .foregroundStyle(.tint)
+                .foregroundStyle(.primary)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
                 Text("SnapInsert")
-                    .font(.title2.weight(.semibold))
+                    .font(BuddyMacTypography.pageTitle)
                 Text("拍一下，即刻接续。")
-                    .font(.callout)
+                    .font(BuddyMacTypography.detail)
                     .foregroundStyle(.secondary)
             }
             Spacer(minLength: 0)
@@ -64,10 +65,10 @@ struct SnapInsertMacTab: View {
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(receiver.status)
-                        .font(.headline)
+                        .font(BuddyMacTypography.cardTitle)
                         .fixedSize(horizontal: false, vertical: true)
                     Text(receiver.computerName)
-                        .font(.caption)
+                        .font(BuddyMacTypography.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(2)
                 }
@@ -77,7 +78,7 @@ struct SnapInsertMacTab: View {
 
             if receiver.requiresInvitation {
                 Label("请在 iPhone 的设置中验证邀请码或管理 Buddy Pro。", systemImage: "iphone")
-                    .font(.callout)
+                    .font(BuddyMacTypography.detail)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -91,9 +92,9 @@ struct SnapInsertMacTab: View {
     private var pairingCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             Label("连接 iPhone", systemImage: "iphone")
-                .font(.headline)
+                .font(BuddyMacTypography.cardTitle)
             Text("与 Limits 共用同一个二维码，一次扫码即可连接。")
-                .font(.callout)
+                .font(BuddyMacTypography.detail)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 12) {
@@ -116,7 +117,7 @@ struct SnapInsertMacTab: View {
                 .accessibilityLabel("最近收到的照片")
             VStack(alignment: .leading, spacing: 6) {
                 Text("最近收到")
-                    .font(.headline)
+                    .font(BuddyMacTypography.cardTitle)
                 Button("重新复制照片", systemImage: "doc.on.doc") { receiver.copyLatest() }
                     .buttonStyle(.borderless)
             }

@@ -12,6 +12,16 @@ enum BuddyStyle {
     static let contentWidth: CGFloat = 680
 }
 
+#if os(macOS)
+enum BuddyMacTypography {
+    static let pageTitle: Font = .title2.weight(.semibold)
+    static let cardTitle: Font = .headline.weight(.semibold)
+    static let body: Font = .body.weight(.regular)
+    static let detail: Font = .callout.weight(.regular)
+    static let caption: Font = .caption.weight(.regular)
+}
+#endif
+
 struct BuddyPageBackground: View {
     @Environment(\.colorScheme) private var colorScheme
 

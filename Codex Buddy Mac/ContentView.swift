@@ -127,6 +127,7 @@ struct MacOverviewView: View {
             .frame(maxWidth: 680)
             .frame(maxWidth: .infinity)
         }
+        .font(BuddyMacTypography.body)
         .background { BuddyPageBackground() }
         .navigationTitle("Limits")
     }
@@ -212,36 +213,87 @@ struct PairingDetailsView: View {
     @State private var copiedField: String?
 
     var body: some View {
-        Form {
-            Section("在 iPhone 上连接") {
-                Text("在 iPhone 上扫描一次，即可保存 Limits 和 SnapInsert 的连接。Limits 直连时，两端需要在同一网络。")
-                    .foregroundStyle(.secondary)
-
-                if let snapPairing = snapReceiver.pairing,
-                   let pairingURL = try? BuddyPairingPayload.unifiedURL(limits: connection, snapInsert: snapPairing) {
-                    HStack {
-                        Spacer()
-                        PairingQRCodeView(payload: pairingURL.absoluteString)
-                            .frame(width: 260, height: 260)
-                        Spacer()
+        ScrollView {
+            VStack(alignment: .leading, spacing: BuddyStyle.contentSpacing) {
+                HStack(spacing: 12) {
+                    Image(systemName: "iphone.and.arrow.forward")
+                        .font(.title2)
+                        .foregroundStyle(.primary)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("连接 iPhone")
+                            .font(BuddyMacTypography.pageTitle)
+                        Text("一次扫码，连接 Limits 与 SnapInsert。")
+                            .font(BuddyMacTypography.detail)
+                            .foregroundStyle(.secondary)
                     }
-                    Text("从 Limits 或 SnapInsert 扫描，均使用这一个二维码。请勿分享。")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                } else {
-                    Label("统一配对信息尚未就绪，请在 SnapInsert 页面检查接收状态。", systemImage: "exclamationmark.triangle")
-                        .foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
                 }
 
-                DisclosureGroup("手动连接 Limits") {
-                LabeledContent("Mac 地址") {
+                pairingCard
+                manualConnectionCard
+                securityCard
+            }
+            .padding(BuddyStyle.pagePadding)
+            .frame(maxWidth: BuddyStyle.contentWidth)
+            .frame(maxWidth: .infinity)
+        }
+        .font(BuddyMacTypography.body)
+        .background { BuddyPageBackground() }
+        .navigationTitle("连接 iPhone")
+    }
+
+    private var pairingCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Label("在 iPhone 上连接", systemImage: "qrcode.viewfinder")
+                .font(BuddyMacTypography.cardTitle)
+            Text("在 iPhone 上扫描一次，即可保存 Limits 和 SnapInsert 的连接。Limits 直连时，两端需要在同一网络。")
+                .font(BuddyMacTypography.detail)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if let snapPairing = snapReceiver.pairing,
+               let pairingURL = try? BuddyPairingPayload.unifiedURL(limits: connection, snapInsert: snapPairing) {
+                PairingQRCodeView(payload: pairingURL.absoluteString)
+                    .frame(maxWidth: 260)
+                    .frame(maxWidth: .infinity)
+                Text("从 Limits 或 SnapInsert 扫描，均使用这一个二维码。请勿分享。")
+                    .font(BuddyMacTypography.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                Label("统一配对信息尚未就绪，请在 SnapInsert 页面检查接收状态。", systemImage: "exclamationmark.triangle")
+                    .font(BuddyMacTypography.detail)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(BuddyStyle.cardPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .buddyCardSurface()
+    }
+
+    private var manualConnectionCard: some View {
+        DisclosureGroup {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top, spacing: 18) {
+                    Text("Mac 地址")
+                        .fixedSize()
+                    Spacer(minLength: 0)
                     Text(connection.baseURL.absoluteString)
+                        .multilineTextAlignment(.trailing)
+                        .fixedSize(horizontal: false, vertical: true)
                         .textSelection(.enabled)
                 }
-                LabeledContent("访问令牌") {
+                HStack(alignment: .top, spacing: 18) {
+                    Text("访问令牌")
+                        .fixedSize()
+                    Spacer(minLength: 0)
                     Text(connection.accessToken)
                         .font(.system(.body, design: .monospaced))
+                        .multilineTextAlignment(.trailing)
+                        .fixedSize(horizontal: false, vertical: true)
                         .textSelection(.enabled)
                 }
 
@@ -257,142 +309,36 @@ struct PairingDetailsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                }
+                .buttonStyle(.bordered)
             }
-
-            Section("安全说明") {
-                Text("二维码包含连接凭据，仅用于你自己的设备。额度直连使用局域网访问令牌；照片使用独立密钥端到端加密。")
-            }
+            .padding(.top, 14)
+        } label: {
+            Label("手动连接 Limits", systemImage: "link")
+                .font(BuddyMacTypography.cardTitle)
         }
-        .formStyle(.grouped)
-        .scrollContentBackground(.hidden)
-        .padding(BuddyStyle.pagePadding)
-        .frame(maxWidth: BuddyStyle.contentWidth)
-        .frame(maxWidth: .infinity)
-        .background { BuddyPageBackground() }
-        .navigationTitle("连接 iPhone")
+        .padding(BuddyStyle.cardPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .buddyCardSurface()
+    }
+
+    private var securityCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Label("安全说明", systemImage: "lock.shield")
+                .font(BuddyMacTypography.cardTitle)
+            Text("二维码包含连接凭据，仅用于你自己的设备。额度直连使用局域网访问令牌；照片使用独立密钥端到端加密。")
+                .font(BuddyMacTypography.detail)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(BuddyStyle.cardPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .buddyCardSurface()
     }
 
     private func copy(_ value: String, field: String) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(value, forType: .string)
         copiedField = field
-    }
-}
-
-struct MacSettingsView: View {
-    let store: MacStatusStore
-    let updateChecker: MacUpdateChecker
-    let snapReceiver: MacReceiver
-    let openPairing: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            MenuBarSettingsView(store: store, updateChecker: updateChecker,
-                                snapReceiver: snapReceiver, openPairing: openPairing)
-                .navigationTitle("设置")
-        }
-    }
-}
-
-private struct MenuBarSettingsView: View {
-    let store: MacStatusStore
-    let updateChecker: MacUpdateChecker
-    @Bindable var snapReceiver: MacReceiver
-    let openPairing: () -> Void
-    @AppStorage(MenuBarDisplayStyle.storageKey) private var displayStyle = MenuBarDisplayStyle.progressBar
-    @State private var confirmingResetPhotos = false
-
-    var body: some View {
-        Form {
-            Section("菜单栏") {
-                Picker("额度样式", selection: $displayStyle) {
-                    ForEach(MenuBarDisplayStyle.allCases) { style in
-                        Text(style.title).tag(style)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
-
-            Section("SnapInsert") {
-                Toggle("接收照片", isOn: Binding(
-                    get: { snapReceiver.isReceivingEnabled },
-                    set: { enabled in
-                        if enabled != snapReceiver.isReceivingEnabled { snapReceiver.toggleReceiving() }
-                    }
-                ))
-                Toggle("自动粘贴", isOn: $snapReceiver.automaticallyPaste)
-                LabeledContent("辅助功能", value: snapReceiver.accessibilityGranted ? "已授权" : "未授权")
-                if !snapReceiver.accessibilityGranted {
-                    Button("打开辅助功能设置") { snapReceiver.requestAccessibility() }
-                }
-                Button("显示配对二维码", systemImage: "qrcode", action: openPairing)
-                Button("重置照片连接…", role: .destructive) { confirmingResetPhotos = true }
-            }
-
-            if store.usesSandboxedFolderAccess {
-                Section {
-                    LabeledContent("已授权文件夹") {
-                        Text(store.authorizedCodexFolderPath ?? "尚未选择")
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                    }
-                    HStack {
-                        Button("选择 .codex 文件夹", systemImage: "folder.badge.plus") {
-                            store.chooseCodexFolder()
-                        }
-                        if store.authorizedCodexFolderPath != nil {
-                            Button("移除授权", systemImage: "xmark.circle", role: .destructive) {
-                                store.clearCodexFolderAuthorization()
-                            }
-                        }
-                    }
-                } header: {
-                    Text("Codex 数据访问")
-                } footer: {
-                    Text("仅访问你选择的文件夹。")
-                }
-            }
-
-            Section("iCloud 同步") {
-                CodexCloudStatusView(status: store.cloudStatus, compact: true)
-                    .padding(.horizontal, -12)
-            }
-
-            Section("软件更新") {
-                LabeledContent("当前版本") {
-                    Text(updateChecker.installedVersionDescription).foregroundStyle(.secondary)
-                }
-                if updateChecker.usesMacAppStoreUpdates {
-                    Text("通过 Mac App Store 更新。").foregroundStyle(.secondary)
-                } else {
-                    UpdateStatusView(updateChecker: updateChecker)
-                }
-            }
-
-            Section("关于") {
-                NavigationLink {
-                    BuddyPrivacyView()
-                } label: {
-                    Label("隐私政策", systemImage: "hand.raised")
-                }
-                Link("使用条款", destination: BuddyLinks.termsURL)
-                Link("支持与反馈", destination: BuddyLinks.supportURL)
-            }
-        }
-        .formStyle(.grouped)
-        .scrollContentBackground(.hidden)
-        .padding(BuddyStyle.pagePadding)
-        .frame(maxWidth: BuddyStyle.contentWidth)
-        .frame(maxWidth: .infinity)
-        .background { BuddyPageBackground() }
-        .onAppear { snapReceiver.refreshAccessibility() }
-        .confirmationDialog("重置 SnapInsert 连接？", isPresented: $confirmingResetPhotos, titleVisibility: .visible) {
-            Button("重置照片连接", role: .destructive) { snapReceiver.rotatePairing(); openPairing() }
-            Button("取消", role: .cancel) {}
-        } message: {
-            Text("当前照片连接将断开，需要重新扫描统一二维码。")
-        }
     }
 }
 
@@ -438,14 +384,6 @@ struct MacMenuContent: View {
                     .frame(maxWidth: .infinity, minHeight: 80)
                     .foregroundStyle(.secondary)
             }
-
-            CodexCloudStatusView(status: store.cloudStatus, compact: true)
-                .padding(.horizontal, 1)
-                .padding(.vertical, 2)
-                .background(
-                    .quaternary.opacity(0.45),
-                    in: RoundedRectangle(cornerRadius: 14, style: .continuous)
-                )
 
             MacSnapInsertMenuStatus(receiver: snapReceiver, open: openSnapInsert)
 
@@ -529,9 +467,9 @@ private struct MacSnapInsertMenuStatus: View {
     var body: some View {
         Button(action: open) {
             HStack(alignment: .center, spacing: 10) {
-                Image(systemName: statusSymbol)
+                Image(systemName: "camera.on.rectangle")
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(statusColor)
+                    .foregroundStyle(.primary)
                     .frame(width: 20)
                     .accessibilityHidden(true)
                 HStack {
@@ -569,78 +507,11 @@ private struct MacSnapInsertMenuStatus: View {
         return "已暂停"
     }
 
-    private var statusSymbol: String {
-        if receiver.requiresInvitation { return "exclamationmark.shield.fill" }
-        if receiver.isListening { return "checkmark.circle.fill" }
-        if receiver.isReceivingEnabled { return "arrow.trianglehead.2.clockwise.rotate.90" }
-        return "pause.circle.fill"
-    }
-
     private var statusColor: Color {
         if receiver.requiresInvitation { return .orange }
         if receiver.isListening { return .green }
         if receiver.isReceivingEnabled { return .orange }
         return .secondary
-    }
-}
-
-private struct UpdateStatusView: View {
-    let updateChecker: MacUpdateChecker
-
-    var body: some View {
-        switch updateChecker.state {
-        case .idle:
-            checkButton
-        case .checking:
-            HStack(spacing: 8) {
-                ProgressView()
-                    .controlSize(.small)
-                Text("正在检查更新…")
-                    .foregroundStyle(.secondary)
-            }
-        case .upToDate:
-            HStack {
-                Label("已是最新版本", systemImage: "checkmark.circle.fill")
-                    .foregroundStyle(.green)
-                Spacer()
-                checkButton
-            }
-        case .updateAvailable(let release):
-            VStack(alignment: .leading, spacing: 9) {
-                Label("可更新到 \(release.displayVersion)", systemImage: "arrow.down.circle.fill")
-                    .foregroundStyle(.blue)
-                if let body = release.body, !body.isEmpty {
-                    Text(body)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(3)
-                }
-                HStack {
-                    Button("下载更新") {
-                        updateChecker.openDownload(for: release)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    Button("重新检查") {
-                        Task { await updateChecker.checkForUpdates() }
-                    }
-                }
-            }
-        case .failed(let message):
-            VStack(alignment: .leading, spacing: 8) {
-                Label("检查更新失败", systemImage: "exclamationmark.triangle.fill")
-                    .foregroundStyle(.orange)
-                Text(message)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                checkButton
-            }
-        }
-    }
-
-    private var checkButton: some View {
-        Button("检查更新", systemImage: "arrow.triangle.2.circlepath") {
-            Task { await updateChecker.checkForUpdates() }
-        }
     }
 }
 
