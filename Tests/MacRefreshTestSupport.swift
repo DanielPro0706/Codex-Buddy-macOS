@@ -47,7 +47,7 @@ enum CodexStatusCache {
 }
 enum CodexCloudSync {
     enum OperationStatus {
-        case notChecked, checking, synced
+        case notChecked, checking, synced, cancelled
         var isSuccessful: Bool { self == .synced }
     }
 }

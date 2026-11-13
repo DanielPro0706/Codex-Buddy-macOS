@@ -33,6 +33,7 @@ nonisolated enum CodexCloudSync {
     enum OperationStatus: Sendable, Equatable {
         case notChecked
         case checking
+        case cancelled
         case synced(Date)
         case connectedWithoutData
         case unavailable(AccountAvailability)
@@ -51,7 +52,8 @@ nonisolated enum CodexCloudSync {
         let pushSecret: String?
     }
 
-    static func accountAvailability() async -> AccountAvailability {
+    static func accountAvailability() async throws -> AccountAvailability {
+        try Task.checkCancellation()
         do {
             return switch try await CKContainer(identifier: containerIdentifier).accountStatus() {
             case .available: .available
@@ -62,12 +64,14 @@ nonisolated enum CodexCloudSync {
             @unknown default: .couldNotDetermine
             }
         } catch {
+            if isCancellation(error) { throw error }
             log(error, operation: "account-status")
             return .couldNotDetermine
         }
     }
 
     static func operationStatus(for error: Error) -> OperationStatus {
+        if isCancellation(error) { return .cancelled }
         log(error, operation: "database")
 
         if let cloudError = error as? CloudSyncError {
@@ -94,7 +98,25 @@ nonisolated enum CodexCloudSync {
         }
     }
 
+    static func isCancellation(_ error: Error) -> Bool {
+        if error is CancellationError { return true }
+        if let urlError = error as? URLError { return urlError.code == .cancelled }
+        if let cloudError = error as? CKError {
+            if cloudError.code == .operationCancelled { return true }
+            if cloudError.code == .partialFailure,
+               let partialErrors = cloudError.partialErrorsByItemID, !partialErrors.isEmpty {
+                return partialErrors.values.allSatisfy { isCancellation($0) }
+            }
+            return false
+        }
+        if let underlying = (error as NSError).userInfo[NSUnderlyingErrorKey] as? Error {
+            return isCancellation(underlying)
+        }
+        return false
+    }
+
     static func fetch() async throws -> CloudState {
+        try Task.checkCancellation()
         try await requireAvailableAccount()
         let database = CKContainer(identifier: containerIdentifier).privateCloudDatabase
         let recordID = CKRecord.ID(recordName: recordName)
@@ -102,6 +124,7 @@ nonisolated enum CodexCloudSync {
             for: [recordID],
             desiredKeys: [snapshotField, secretField, updatedAtField]
         )
+        try Task.checkCancellation()
         guard let result = results[recordID] else { return CloudState(snapshot: nil, pushSecret: nil) }
 
         do {
@@ -116,10 +139,18 @@ nonisolated enum CodexCloudSync {
 
     @discardableResult
     static func publish(snapshot: CodexStatusSnapshot, pushSecret: String) async throws -> CodexStatusSnapshot {
+        try Task.checkCancellation()
         try await requireAvailableAccount()
+        try Task.checkCancellation()
         let database = CKContainer(identifier: containerIdentifier).privateCloudDatabase
         let recordID = CKRecord.ID(recordName: recordName)
-        let existing = try? await fetchRecord(database: database, recordID: recordID)
+        let existing: CKRecord?
+        do {
+            existing = try await fetchRecord(database: database, recordID: recordID)
+        } catch let error as CKError where error.code == .unknownItem {
+            existing = nil
+        }
+        try Task.checkCancellation()
 
         if let existingSnapshot = existing.flatMap(snapshot(from:)),
            existingSnapshot.capturedAt > snapshot.capturedAt {
@@ -131,12 +162,14 @@ nonisolated enum CodexCloudSync {
         record[secretField] = pushSecret as CKRecordValue
         record[updatedAtField] = Date.now as CKRecordValue
 
+        try Task.checkCancellation()
         let result = try await database.modifyRecords(
             saving: [record],
             deleting: [],
             savePolicy: .changedKeys,
             atomically: true
         )
+        try Task.checkCancellation()
         guard let saveResult = result.saveResults[recordID] else { return snapshot }
         _ = try saveResult.get()
         return snapshot
@@ -149,7 +182,9 @@ nonisolated enum CodexCloudSync {
     }
 
     private static func fetchRecord(database: CKDatabase, recordID: CKRecord.ID) async throws -> CKRecord {
+        try Task.checkCancellation()
         let results = try await database.records(for: [recordID])
+        try Task.checkCancellation()
         guard let result = results[recordID] else { throw CKError(.unknownItem) }
         return try result.get()
     }
@@ -160,7 +195,8 @@ nonisolated enum CodexCloudSync {
     }
 
     private static func requireAvailableAccount() async throws {
-        let availability = await accountAvailability()
+        let availability = try await accountAvailability()
+        try Task.checkCancellation()
         guard availability == .available else {
             throw CloudSyncError(availability: availability)
         }

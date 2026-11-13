@@ -40,10 +40,20 @@ nonisolated enum CodexStatusClient {
 
     static func refreshLatest() async -> RefreshResult {
         let cachedSnapshot = CodexStatusCache.loadSnapshot()
-        if let connection = CodexStatusCache.loadConnection(),
-           let snapshot = try? await fetch(connection: connection) {
-            CodexStatusCache.save(snapshot: snapshot)
-            return RefreshResult(snapshot: snapshot, source: .mac, cloudStatus: .notChecked)
+        guard !Task.isCancelled else {
+            return RefreshResult(snapshot: cachedSnapshot, source: .cache, cloudStatus: .cancelled)
+        }
+        if let connection = CodexStatusCache.loadConnection() {
+            do {
+                let snapshot = try await fetch(connection: connection)
+                try Task.checkCancellation()
+                CodexStatusCache.save(snapshot: snapshot)
+                return RefreshResult(snapshot: snapshot, source: .mac, cloudStatus: .notChecked)
+            } catch {
+                if Task.isCancelled || CodexCloudSync.isCancellation(error) {
+                    return RefreshResult(snapshot: cachedSnapshot, source: .cache, cloudStatus: .cancelled)
+                }
+            }
         }
 
         return await refreshFromCloudResult(cachedSnapshot: cachedSnapshot)
@@ -54,9 +64,11 @@ nonisolated enum CodexStatusClient {
     }
 
     static func publishToCloud(_ snapshot: CodexStatusSnapshot) async -> CodexCloudSync.OperationStatus {
+        guard !Task.isCancelled else { return .cancelled }
         let secret = CodexStatusCache.loadOrCreatePushSecret()
         do {
             _ = try await CodexCloudSync.publish(snapshot: snapshot, pushSecret: secret)
+            try Task.checkCancellation()
             do {
                 _ = try await CodexPushService.publish(snapshot: snapshot, secret: secret)
             } catch {
@@ -80,7 +92,9 @@ nonisolated enum CodexStatusClient {
         cachedSnapshot: CodexStatusSnapshot?
     ) async -> RefreshResult {
         do {
+            try Task.checkCancellation()
             let state = try await CodexCloudSync.fetch()
+            try Task.checkCancellation()
             if let secret = state.pushSecret { CodexStatusCache.savePushSecret(secret) }
             guard let cloudSnapshot = state.snapshot else {
                 return RefreshResult(

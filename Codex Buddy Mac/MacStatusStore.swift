@@ -192,10 +192,14 @@ final class MacStatusStore {
         cloudPublishingTask = Task { [weak self] in
             guard let self else { return }
             defer { cloudPublishingTask = nil }
-            while let next = pendingCloudSnapshot {
+            while !Task.isCancelled, let next = pendingCloudSnapshot {
                 pendingCloudSnapshot = nil
+                let previousStatus = cloudStatus
                 cloudStatus = .checking
-                cloudStatus = await CodexStatusClient.publishToCloud(next)
+                let result = await CodexStatusClient.publishToCloud(next)
+                cloudStatus = Task.isCancelled || result == .cancelled
+                    ? (previousStatus.isSuccessful ? previousStatus : .cancelled)
+                    : result
             }
         }
     }

@@ -395,6 +395,9 @@ struct CodexCloudStatusView: View {
         case .checking:
             Label("正在连接 iCloud", systemImage: "arrow.trianglehead.2.clockwise.rotate.90")
                 .foregroundStyle(.secondary)
+        case .cancelled:
+            Label("iCloud 同步已暂停，稍后自动重试", systemImage: "icloud")
+                .foregroundStyle(.secondary)
         case .synced:
             Label("iCloud 已连接 · 同步成功", systemImage: "checkmark.icloud.fill")
                 .foregroundStyle(.green)
